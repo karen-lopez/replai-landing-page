@@ -42,11 +42,11 @@ export function PricingSection() {
             Planes simples y transparentes
           </h2>
         </div>
-        
+
         <div className="grid gap-8 md:grid-cols-2 max-w-3xl mx-auto">
           {plans.map((plan, index) => (
-            <Card 
-              key={index} 
+            <Card
+              key={index}
               className={`relative border-2 overflow-hidden ${plan.popular ? 'border-[#1B3A5C] shadow-2xl' : 'border-[#1B3A5C]/15 shadow-sm'}`}
             >
               {plan.popular && (
@@ -75,17 +75,17 @@ export function PricingSection() {
                     </li>
                   ))}
                 </ul>
-                <Button 
+                <Button
                   className="w-full bg-[#0F6E56] hover:bg-[#0d5f49] text-white rounded-full font-semibold"
                   onClick={() => document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' })}
                 >
-                  {plan.popular ? 'Suscribirse' : 'Empezar mes gratis'}
+                  {plan.popular ? 'Empezar' : 'Empezar mes gratis'}
                 </Button>
               </CardContent>
             </Card>
           ))}
         </div>
-        
+
         <p className="text-center text-muted-foreground mt-10 max-w-lg mx-auto text-sm">
           Primer mes gratis para los primeros 5 negocios en el plan Starter. Sin tarjeta de credito. Configuracion en 24 horas.
         </p>
