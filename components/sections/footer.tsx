@@ -20,8 +20,8 @@ export function Footer() {
             <Link href="/terminos-de-servicio" className="text-white/60 hover:text-white transition-colors">
               Terminos de servicio
             </Link>
-            <a href="https://wa.me/573182872249" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-white transition-colors">
-              Contacto
+            <a href="tel:+573182872249" className="text-white/60 hover:text-white transition-colors">
+              +57 318 287 2249
             </a>
           </nav>
         </div>
