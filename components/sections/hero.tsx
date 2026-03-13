@@ -12,12 +12,6 @@ export function HeroSection() {
       <div className="container mx-auto px-4 relative">
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 items-center">
           <div className="space-y-8">
-            {/* Eyebrow badge */}
-            <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-1.5">
-              <span className="w-2 h-2 rounded-full bg-[#0F6E56] animate-pulse" />
-              <span className="text-white/80 text-sm font-medium">Para salones de belleza, spas y consultorios</span>
-            </div>
-
             <h1 className="text-4xl font-extrabold tracking-tight text-white md:text-5xl lg:text-6xl text-balance leading-tight">
               Tu negocio nunca para de{" "}
               <span className="text-[#4ECBA5]">responder</span>
