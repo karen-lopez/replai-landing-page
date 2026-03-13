@@ -115,7 +115,10 @@ export default function TerminosDeServicio() {
 
       <Section title="13. Contacto">
         <p>
-          Para cualquier consulta relacionada con estos Terminos de Servicio, escribanos a: <a href="mailto:hola@replai.co" className="text-[#0F6E56] hover:underline">hola@replai.co</a>.
+          Para cualquier consulta relacionada con estos Terminos de Servicio, escribanos al WP{" "}
+          <a href="https://wa.me/573182872249" target="_blank" rel="noopener noreferrer" className="text-[#0F6E56] hover:underline">
+            +573182872249
+          </a>.
         </p>
       </Section>
     </article>
