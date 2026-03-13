@@ -1,16 +1,27 @@
+import { Header } from "@/components/sections/header"
+import { HeroSection } from "@/components/sections/hero"
+import { HowItWorksSection } from "@/components/sections/how-it-works"
+import { FeaturesSection } from "@/components/sections/features"
+import { LaunchOfferSection } from "@/components/sections/launch-offer"
+import { TestimonialsSection } from "@/components/sections/testimonials"
+import { PricingSection } from "@/components/sections/pricing"
+import { LeadFormSection } from "@/components/sections/lead-form"
+import { Footer } from "@/components/sections/footer"
+
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center font-sans">
-      <main className="flex w-full max-w-3xl flex-col items-center gap-8 px-6 py-16 text-center sm:items-start sm:text-left">
-        <div className="flex flex-col gap-4">
-          <h1 className="text-4xl font-bold tracking-tight">
-            Replai
-          </h1>
-          <p className="max-w-md text-lg text-muted-foreground">
-            To get started, send a prompt or modify this page directly.
-          </p>
-        </div>
+    <>
+      <Header />
+      <main>
+        <HeroSection />
+        <HowItWorksSection />
+        <FeaturesSection />
+        <LaunchOfferSection />
+        <TestimonialsSection />
+        <PricingSection />
+        <LeadFormSection />
       </main>
-    </div>
+      <Footer />
+    </>
   );
 }
