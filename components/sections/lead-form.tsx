@@ -84,7 +84,7 @@ export function LeadFormSection() {
                   </Field>
                 </FieldGroup>
                 
-                <Button type="submit" size="lg" className="w-full bg-primary hover:bg-primary/90">
+                <Button type="submit" size="lg" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
                   Quiero mi asistente gratis
                 </Button>
                 

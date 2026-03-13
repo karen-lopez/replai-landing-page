@@ -70,11 +70,11 @@ export function PricingSection() {
                   ))}
                 </ul>
                 <Button 
-                  className={`w-full ${plan.popular ? 'bg-primary hover:bg-primary/90' : ''}`}
-                  variant={plan.popular ? 'default' : 'outline'}
+                  className={`w-full ${plan.popular ? 'bg-accent hover:bg-accent/90' : 'bg-accent hover:bg-accent/90 text-accent-foreground'}`}
+                  variant="default"
                   onClick={() => document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' })}
                 >
-                  Empezar mes gratis
+                  {plan.popular ? 'Suscribirse' : 'Empezar mes gratis'}
                 </Button>
               </CardContent>
             </Card>

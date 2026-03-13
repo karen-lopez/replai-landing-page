@@ -13,7 +13,7 @@ export function Header() {
           
           <Button 
             size="sm"
-            className="bg-primary hover:bg-primary/90"
+            className="bg-accent hover:bg-accent/90 text-accent-foreground"
             onClick={() => document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' })}
           >
             Empezar gratis

@@ -34,13 +34,13 @@ export function LaunchOfferSection() {
           
           <Button 
             size="lg" 
-            className="text-lg px-10 py-6 bg-primary hover:bg-primary/90 mb-4"
+            className="text-lg px-10 py-6 bg-accent hover:bg-accent/90 text-accent-foreground mb-4"
             onClick={() => document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' })}
           >
             Quiero mi mes gratis
           </Button>
           
-          <p className="text-sm text-primary font-semibold">
+          <p className="text-sm text-accent font-semibold">
             Solo quedan 5 cupos disponibles
           </p>
         </div>

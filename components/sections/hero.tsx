@@ -17,7 +17,7 @@ export function HeroSection() {
             </p>
             <Button 
               size="lg" 
-              className="text-lg px-8 py-6 bg-primary hover:bg-primary/90"
+              className="text-lg px-8 py-6 bg-accent hover:bg-accent/90 text-accent-foreground"
               onClick={() => document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' })}
             >
               Quiero probarlo gratis
