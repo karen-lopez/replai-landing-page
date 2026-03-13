@@ -1,7 +1,7 @@
 "use client"
 
-import Image from "next/image"
 import Link from "next/link"
+import { ReplaiLogo } from "@/components/replai-logo"
 
 export function Footer() {
   return (
@@ -9,13 +9,7 @@ export function Footer() {
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="text-center md:text-left">
-            <Image
-              src="/images/replai-logo.png"
-              alt="Replai"
-              width={110}
-              height={36}
-              className="h-7 w-auto object-contain brightness-0 invert mb-2"
-            />
+            <ReplaiLogo className="h-8 w-auto mb-2" invert />
             <p className="text-white/60 text-sm">Tu negocio nunca para de responder</p>
           </div>
           

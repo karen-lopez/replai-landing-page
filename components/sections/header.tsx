@@ -1,21 +1,14 @@
 "use client"
 
-import Image from "next/image"
 import { Button } from "@/components/ui/button"
+import { ReplaiLogo } from "@/components/replai-logo"
 
 export function Header() {
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80 border-b border-border">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          <Image
-            src="/images/replai-logo.png"
-            alt="Replai"
-            width={120}
-            height={40}
-            className="h-8 w-auto object-contain"
-            priority
-          />
+          <ReplaiLogo className="h-9 w-auto" />
           
           <Button 
             size="sm"
