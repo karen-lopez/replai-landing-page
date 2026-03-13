@@ -14,15 +14,15 @@ export function Footer() {
           </div>
           
           <nav className="flex flex-wrap items-center justify-center gap-6 text-sm">
-            <Link href="#" className="text-white/60 hover:text-white transition-colors">
+            <Link href="/politica-de-privacidad" className="text-white/60 hover:text-white transition-colors">
               Politica de privacidad
             </Link>
-            <Link href="#" className="text-white/60 hover:text-white transition-colors">
+            <Link href="/terminos-de-servicio" className="text-white/60 hover:text-white transition-colors">
               Terminos de servicio
             </Link>
-            <Link href="#" className="text-white/60 hover:text-white transition-colors">
+            <a href="https://wa.me/573182872249" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-white transition-colors">
               Contacto
-            </Link>
+            </a>
           </nav>
         </div>
         
