@@ -116,8 +116,8 @@ export default function TerminosDeServicio() {
       <Section title="13. Contacto">
         <p>
           Para cualquier consulta relacionada con estos Terminos de Servicio, escribanos al WP{" "}
-          <a href="https://wa.me/573182872249" target="_blank" rel="noopener noreferrer" className="text-[#0F6E56] hover:underline">
-            +573182872249
+          <a href="https://wa.me/573192411201" target="_blank" rel="noopener noreferrer" className="text-[#0F6E56] hover:underline">
+            +573192411201
           </a>.
         </p>
       </Section>

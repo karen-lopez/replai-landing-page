@@ -11,7 +11,7 @@ export function LeadFormSection() {
             <p className="text-muted-foreground text-sm mb-8">Primer mes gratis, sin tarjeta de credito.</p>
 
             <a
-              href="https://wa.me/573182872249?text=Hola,%20quiero%20saber%20m%C3%A1s%20sobre%20Replai"
+              href="https://wa.me/573192411201?text=Hola,%20quiero%20saber%20m%C3%A1s%20sobre%20Replai"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 w-full bg-[#0F6E56] hover:bg-[#0d5f49] text-white rounded-full font-semibold text-base px-8 py-4 transition-colors shadow-lg"
