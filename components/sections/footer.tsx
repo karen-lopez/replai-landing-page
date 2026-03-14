@@ -20,7 +20,7 @@ export function Footer() {
             <Link href="/terminos-de-servicio" className="text-white/60 hover:text-white transition-colors">
               Terminos de servicio
             </Link>
-            <a href="https://wa.me/573182872249" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-white transition-colors">
+            <a href="https://wa.me/573192411201" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-white transition-colors">
               Contacto
             </a>
           </nav>
