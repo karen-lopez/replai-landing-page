@@ -17,16 +17,11 @@ import { Separator } from "@/components/ui/separator"
 
 function DashboardSidebar() {
   const { state } = useSidebar()
-  const isCollapsed = state === "collapsed"
 
   return (
     <Sidebar variant="sidebar" collapsible="icon">
       <SidebarHeader className="flex items-center justify-center p-4">
-        {isCollapsed ? (
-          <ReplaiLogo iconOnly className="h-8 w-8" />
-        ) : (
-          <ReplaiLogo />
-        )}
+        {!isCollapsed && <ReplaiLogo />}
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
