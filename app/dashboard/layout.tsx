@@ -14,6 +14,9 @@ import {
 import { SidebarNav } from "@/components/dashboard/sidebar-nav"
 import { ReplaiLogo } from "@/components/replai-logo"
 import { Separator } from "@/components/ui/separator"
+import { AuthProvider } from "@/lib/auth-context"
+import { AuthGuard } from "@/components/dashboard/auth-guard"
+import { UserMenu } from "@/components/dashboard/user-menu"
 
 function DashboardSidebar() {
   const { state } = useSidebar()
@@ -41,16 +44,21 @@ export default function DashboardLayout({
   children: React.ReactNode
 }) {
   return (
-    <SidebarProvider>
-      <DashboardSidebar />
-      <SidebarInset>
-        <header className="flex h-14 items-center gap-4 border-b bg-background px-4 lg:px-6">
-          <SidebarTrigger className="-ml-1" />
-          <Separator orientation="vertical" className="h-6" />
-          <div className="flex-1" />
-        </header>
-        <main className="flex-1 overflow-auto p-4 lg:p-6">{children}</main>
-      </SidebarInset>
-    </SidebarProvider>
+    <AuthProvider>
+      <AuthGuard>
+        <SidebarProvider>
+          <DashboardSidebar />
+          <SidebarInset>
+            <header className="flex h-14 items-center gap-4 border-b bg-background px-4 lg:px-6">
+              <SidebarTrigger className="-ml-1" />
+              <Separator orientation="vertical" className="h-6" />
+              <div className="flex-1" />
+              <UserMenu />
+            </header>
+            <main className="flex-1 overflow-auto p-4 lg:p-6">{children}</main>
+          </SidebarInset>
+        </SidebarProvider>
+      </AuthGuard>
+    </AuthProvider>
   )
 }
