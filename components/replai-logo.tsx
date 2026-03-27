@@ -12,9 +12,9 @@ export function ReplaiLogo({ className = "", iconOnly = false, invert = false }:
       <Image
         src="/images/replai-icon.png"
         alt="Replai"
-        width={48}
-        height={48}
-        className={className}
+        width={32}
+        height={32}
+        className={`flex-shrink-0 ${className}`}
       />
     )
   }
