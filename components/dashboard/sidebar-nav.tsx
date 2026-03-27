@@ -13,7 +13,9 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
+  useSidebar,
 } from "@/components/ui/sidebar"
+import { useIsMobile } from "@/hooks/use-mobile"
 
 const navItems = [
   {
@@ -45,6 +47,14 @@ const navItems = [
 
 export function SidebarNav() {
   const pathname = usePathname()
+  const { setOpenMobile } = useSidebar()
+  const isMobile = useIsMobile()
+
+  const handleNavClick = () => {
+    if (isMobile) {
+      setOpenMobile(false)
+    }
+  }
 
   return (
     <SidebarMenu>
@@ -62,7 +72,7 @@ export function SidebarNav() {
                   : ""
               }
             >
-              <Link href={item.href}>
+              <Link href={item.href} onClick={handleNavClick}>
                 <item.icon className="h-4 w-4" />
                 <span>{item.title}</span>
               </Link>
