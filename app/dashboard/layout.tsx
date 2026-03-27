@@ -17,6 +17,7 @@ import { Separator } from "@/components/ui/separator"
 
 function DashboardSidebar() {
   const { state } = useSidebar()
+  const isCollapsed = state === "collapsed"
 
   return (
     <Sidebar variant="sidebar" collapsible="icon">
