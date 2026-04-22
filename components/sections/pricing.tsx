@@ -58,20 +58,20 @@ export function PricingSection() {
           </h2>
         </div>
 
-        <div className="grid gap-8 md:grid-cols-3 max-w-5xl mx-auto">
+        <div className="grid gap-8 md:grid-cols-3 max-w-5xl mx-auto pt-4">
           {plans.map((plan, index) => (
-            <Card
-              key={index}
-              className={`relative border-2 overflow-hidden ${plan.popular ? 'border-[#1B3A5C] shadow-2xl' : 'border-[#1B3A5C]/15 shadow-sm'}`}
-            >
+            <div key={index} className="relative">
               {plan.popular && (
-                <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#1B3A5C] to-[#0F6E56]" />
-              )}
-              {plan.popular && (
-                <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#1B3A5C] text-white border-0 shadow-md">
+                <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#1B3A5C] text-white border-0 shadow-md z-10">
                   Más popular
                 </Badge>
               )}
+              <Card
+                className={`relative border-2 overflow-hidden h-full ${plan.popular ? 'border-[#1B3A5C] shadow-2xl' : 'border-[#1B3A5C]/15 shadow-sm'}`}
+              >
+                {plan.popular && (
+                  <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#1B3A5C] to-[#0F6E56]" />
+                )}
               <CardHeader className="text-center pb-2 pt-8">
                 <CardTitle className="text-xl font-extrabold text-[#1B3A5C]">{plan.name}</CardTitle>
                 <div className="mt-4">
@@ -100,6 +100,7 @@ export function PricingSection() {
                 </Button>
               </CardContent>
             </Card>
+            </div>
           ))}
         </div>
 
