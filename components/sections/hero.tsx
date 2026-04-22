@@ -23,9 +23,11 @@ export function HeroSection() {
               <Button 
                 size="lg" 
                 className="text-base px-8 py-6 bg-[#0F6E56] hover:bg-[#0d5f49] text-white rounded-full font-semibold shadow-lg"
-                onClick={() => document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' })}
+                asChild
               >
-                Quiero el primer mes gratis
+                <a href="https://wa.me/573192411201?text=Hola,%20quiero%20agendar%20una%20demo%20de%20Replai" target="_blank" rel="noopener noreferrer">
+                  Agenda una demo gratis
+                </a>
               </Button>
               <Button 
                 size="lg" 

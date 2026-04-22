@@ -13,9 +13,11 @@ export function Header() {
           <Button 
             size="sm"
             className="bg-[#0F6E56] hover:bg-[#0d5f49] text-white rounded-full px-5"
-            onClick={() => document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' })}
+            asChild
           >
-            Empezar gratis
+            <a href="https://wa.me/573192411201?text=Hola,%20quiero%20agendar%20una%20demo%20de%20Replai" target="_blank" rel="noopener noreferrer">
+              Agendar demo
+            </a>
           </Button>
         </div>
       </div>
