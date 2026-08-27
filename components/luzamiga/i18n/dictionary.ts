@@ -38,10 +38,14 @@ export const dictionary = {
     "map.locating": "Ubicando…",
     "map.live": "En vivo",
     "map.updated": "Actualizado",
+    "map.updatedAt": "Actualizado {time}",
     "map.legend": "Referencias",
     "map.offline": "Sin conexión — mostrando datos guardados",
     "map.online": "Conectado",
     "map.pending": "reporte(s) pendiente(s) de enviar",
+    "map.contact": "Contacto",
+    "map.geoUnsupported": "Tu navegador no permite obtener la ubicación.",
+    "map.geoDenied": "No pudimos obtener tu ubicación. Activa el GPS e inténtalo de nuevo.",
 
     // Leyenda / categorías
     "cat.supplies": "Insumos",
@@ -51,6 +55,11 @@ export const dictionary = {
     "report.blockedRoad": "Vía bloqueada",
     "report.landslideRisk": "Riesgo de derrumbe",
     "report.safeZone": "Zona segura",
+    "report.loginNeeded": "Inicia sesión para reportar el estado de tu zona.",
+
+    // Sincronización offline
+    "offline.syncing": "Sincronizando reportes…",
+    "offline.synced": "{count} reporte(s) sincronizado(s)",
 
     // Reportes de usuario
     "userReport.title": "Reporta en tu ubicación",
@@ -66,6 +75,7 @@ export const dictionary = {
     "userReport.success": "¡Gracias! Tu reporte se registró.",
     "userReport.queued": "Sin conexión: tu reporte se enviará al reconectar.",
     "userReport.locationError": "No pudimos obtener tu ubicación. Activa el GPS e inténtalo de nuevo.",
+    "userReport.outsideColombia": "La ubicación está fuera de Colombia. Este mapa es solo para Colombia.",
 
     // Ofrecer ayuda (gating)
     "offer.needAccountTitle": "Crea una cuenta para publicar",
@@ -105,10 +115,14 @@ export const dictionary = {
     "map.locating": "Locating…",
     "map.live": "Live",
     "map.updated": "Updated",
+    "map.updatedAt": "Updated {time}",
     "map.legend": "Legend",
     "map.offline": "Offline — showing saved data",
     "map.online": "Connected",
     "map.pending": "report(s) pending to send",
+    "map.contact": "Contact",
+    "map.geoUnsupported": "Your browser can't get your location.",
+    "map.geoDenied": "We couldn't get your location. Enable GPS and try again.",
 
     "cat.supplies": "Supplies",
     "cat.search": "Search",
@@ -117,6 +131,10 @@ export const dictionary = {
     "report.blockedRoad": "Blocked road",
     "report.landslideRisk": "Landslide risk",
     "report.safeZone": "Safe zone",
+    "report.loginNeeded": "Log in to report the status of your area.",
+
+    "offline.syncing": "Syncing reports…",
+    "offline.synced": "{count} report(s) synced",
 
     "userReport.title": "Report at your location",
     "userReport.subtitle": "Help your community by reporting the status of your current area.",
@@ -130,6 +148,7 @@ export const dictionary = {
     "userReport.success": "Thank you! Your report was registered.",
     "userReport.queued": "Offline: your report will be sent when you reconnect.",
     "userReport.locationError": "We couldn't get your location. Enable GPS and try again.",
+    "userReport.outsideColombia": "The location is outside Colombia. This map is for Colombia only.",
 
     "offer.needAccountTitle": "Create an account to publish",
     "offer.needAccountBody": "To publish what you offer you need an account. It's quick and free.",
