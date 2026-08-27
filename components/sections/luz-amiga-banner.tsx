@@ -41,7 +41,7 @@ export function LuzAmigaBanner() {
               Luz Amiga
             </p>
             <p className="mt-1 text-sm leading-snug" style={{ color: "#7A5C33" }}>
-              {"Apoyo gratuito para la comunidad afectada por el terremoto en Pereira."}
+              {"Apoyo gratuito para las comunidades afectadas por el terremoto en Colombia."}
             </p>
           </div>
         </div>
