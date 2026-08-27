@@ -32,7 +32,7 @@ function getPosition(): Promise<{ lat: number; lng: number }> {
 export function LuzAmigaOfferHelp() {
   const { user, openRegister } = useAuth()
   const { t } = useT()
-  const [selected, setSelected] = useState<CategoryId>("supplies")
+  const [selected, setSelected] = useState<CategoryId>("reopening")
   const [submitted, setSubmitted] = useState(false)
   const [sending, setSending] = useState(false)
   const [queued, setQueued] = useState(false)
@@ -89,10 +89,11 @@ export function LuzAmigaOfferHelp() {
       <div className="container mx-auto max-w-5xl px-4">
         <div className="mb-10 max-w-2xl">
           <h2 className="text-3xl font-bold tracking-tight text-balance md:text-4xl" style={{ color: "#3D3020" }}>
-            Ofrece tu ayuda
+            Reactivando el Comercio
           </h2>
           <p className="mt-3 text-lg leading-relaxed" style={{ color: "#6B5B45" }}>
-            Publica lo que puedes ofrecer. Cada gesto cuenta. Elige una categoría y cuéntanos los detalles.
+            ¿Tienes un negocio? Publica tu reapertura, un evento o una promoción y ayuda a reactivar la economía de tu
+            comunidad. Elige una etiqueta y cuéntanos los detalles.
           </p>
         </div>
 
@@ -165,12 +166,12 @@ export function LuzAmigaOfferHelp() {
               <div className="flex flex-col items-center gap-4 py-10 text-center">
                 <CheckCircle2 className="h-12 w-12" style={{ color: "#D97706" }} aria-hidden="true" />
                 <h3 className="text-xl font-semibold" style={{ color: "#3D3020" }}>
-                  ¡Gracias por tu generosidad!
+                  ¡Gracias por reactivar el comercio!
                 </h3>
                 <p className="max-w-md" style={{ color: "#6B5B45" }}>
                   {queued
-                    ? "Estás sin conexión: tu ofrecimiento se publicará automáticamente cuando vuelva la señal."
-                    : "Tu ofrecimiento ha sido recibido y ya aparece en el mapa y en la sección Encontrar ayuda."}
+                    ? "Estás sin conexión: tu publicación se enviará automáticamente cuando vuelva la señal."
+                    : "Tu publicación fue recibida y ya aparece en el mapa y en la sección Explora el comercio."}
                 </p>
                 <Button
                   variant="outline"
@@ -185,21 +186,21 @@ export function LuzAmigaOfferHelp() {
                     setDetails("")
                   }}
                 >
-                  Publicar otro ofrecimiento
+                  Publicar de nuevo
                 </Button>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="grid gap-5">
                 <div className="grid gap-2">
                   <Label htmlFor="offer-name" style={{ color: "#4A3B2A" }}>
-                    Tu nombre o el de tu organización
+                    Nombre de tu negocio
                   </Label>
                   <Input
                     id="offer-name"
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="Ej. María López / Fundación Manos Unidas"
+                    placeholder="Ej. Panadería La Espiga"
                     className="rounded-xl"
                     style={{ borderColor: "#EEE1C9" }}
                   />
@@ -238,9 +239,9 @@ export function LuzAmigaOfferHelp() {
 
                 <div className="grid gap-2">
                   <Label htmlFor="offer-details" style={{ color: "#4A3B2A" }}>
-                    ¿Qué ofreces?{" "}
+                    ¿Qué quieres publicar?{" "}
                     <span className="font-normal" style={{ color: "#8A7659" }}>
-                      (categoría: {CATEGORIES.find((c) => c.id === selected)?.label})
+                      (etiqueta: {CATEGORIES.find((c) => c.id === selected)?.label})
                     </span>
                   </Label>
                   <Textarea
@@ -249,7 +250,7 @@ export function LuzAmigaOfferHelp() {
                     rows={4}
                     value={details}
                     onChange={(e) => setDetails(e.target.value)}
-                    placeholder="Cuéntanos con calma qué puedes ofrecer y cómo ayudará."
+                    placeholder="Cuéntanos sobre tu reapertura, evento o promoción."
                     className="rounded-xl"
                     style={{ borderColor: "#EEE1C9" }}
                   />

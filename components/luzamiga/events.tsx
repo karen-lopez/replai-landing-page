@@ -14,43 +14,43 @@ interface CommunityEvent {
 const EVENTS: CommunityEvent[] = [
   {
     id: "1",
-    title: "Concierto por la esperanza",
-    type: "Música",
+    title: "Feria de emprendedores locales",
+    type: "Feria",
     date: "Sábado 6 de septiembre",
-    time: "5:00 p. m.",
+    time: "10:00 a. m.",
     location: "Parque Sucre, Armenia",
     description:
-      "Una tarde de música en vivo para reunirnos, respirar y recordar que no estamos solos.",
+      "Negocios del barrio se reúnen para dar a conocer sus productos y reactivar las ventas. Entrada libre.",
   },
   {
     id: "2",
-    title: "Taller de arte para niños",
-    type: "Bienestar",
+    title: "Mercado nocturno de comidas",
+    type: "Gastronomía",
     date: "Domingo 7 de septiembre",
-    time: "10:00 a. m.",
-    location: "Casa Cultural La Ceiba, Pereira",
+    time: "6:00 p. m.",
+    location: "Plaza principal, Manizales",
     description:
-      "Un espacio seguro donde los más pequeños pueden expresar sus emociones a través del dibujo y la pintura.",
+      "Los restaurantes locales se reúnen para una noche de sabores, música en vivo y comunidad.",
   },
   {
     id: "3",
-    title: "Yoga y respiración consciente",
-    type: "Bienestar",
+    title: "Bazar artesanal por la reactivación",
+    type: "Bazar",
     date: "Lunes 8 de septiembre",
-    time: "6:30 a. m.",
-    location: "Plaza de Bolívar, Manizales",
+    time: "9:00 a. m.",
+    location: "Parque del Café, Armenia",
     description:
-      "Práctica suave al aire libre para liberar tensión y encontrar calma después de días difíciles.",
+      "Artesanas y artesanos muestran su trabajo para reactivar la economía del sector.",
   },
   {
     id: "4",
-    title: "Círculo de la palabra",
-    type: "Comunidad",
+    title: "Ruta de compras del comercio local",
+    type: "Comercio",
     date: "Miércoles 10 de septiembre",
-    time: "4:00 p. m.",
-    location: "Salón Comunal Barrio Nuevo, Pereira",
+    time: "todo el día",
+    location: "Centro comercial del barrio, Pereira",
     description:
-      "Nos sentamos en círculo para compartir lo que sentimos y acompañarnos entre vecinos.",
+      "Un recorrido por los negocios que reabrieron, con descuentos y sorpresas para la comunidad.",
   },
 ]
 
@@ -60,10 +60,10 @@ export function LuzAmigaEvents() {
       <div className="container mx-auto max-w-5xl px-4">
         <div className="mb-10 max-w-2xl">
           <h2 className="text-3xl font-bold tracking-tight text-balance md:text-4xl" style={{ color: "#3D3020" }}>
-            Eventos para sanar juntos
+            Eventos para reactivar el comercio
           </h2>
           <p className="mt-3 text-lg leading-relaxed" style={{ color: "#6B5B45" }}>
-            Actividades culturales y de bienestar organizadas por la comunidad para acompañarnos en este momento.
+            Ferias, mercados y actividades organizadas por la comunidad para volver a mover la economía local.
           </p>
         </div>
 

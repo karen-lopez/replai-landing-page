@@ -33,7 +33,7 @@ export const dictionary = {
     // Mapa
     "map.title": "Mapa de la comunidad",
     "map.subtitle":
-      "Reportes, ayudas y eventos en tiempo real por toda Colombia. Se actualiza automáticamente.",
+      "Negocios, eventos y reportes en tiempo real por toda Colombia. Se actualiza automáticamente.",
     "map.myLocation": "Mi ubicación",
     "map.locating": "Ubicando…",
     "map.live": "En vivo",
@@ -48,9 +48,8 @@ export const dictionary = {
     "map.geoDenied": "No pudimos obtener tu ubicación. Activa el GPS e inténtalo de nuevo.",
 
     // Leyenda / categorías
-    "cat.supplies": "Insumos",
-    "cat.search": "Búsqueda",
-    "cat.health": "Salud",
+    "cat.reopening": "Reapertura",
+    "cat.promotions": "Promociones",
     "cat.events": "Eventos",
     "report.blockedRoad": "Vía bloqueada",
     "report.landslideRisk": "Riesgo de derrumbe",
@@ -110,7 +109,7 @@ export const dictionary = {
     "register.goLogin": "Log in",
 
     "map.title": "Community map",
-    "map.subtitle": "Reports, help and events in real time across Colombia. Updates automatically.",
+    "map.subtitle": "Businesses, events and reports in real time across Colombia. Updates automatically.",
     "map.myLocation": "My location",
     "map.locating": "Locating…",
     "map.live": "Live",
@@ -124,9 +123,8 @@ export const dictionary = {
     "map.geoUnsupported": "Your browser can't get your location.",
     "map.geoDenied": "We couldn't get your location. Enable GPS and try again.",
 
-    "cat.supplies": "Supplies",
-    "cat.search": "Search",
-    "cat.health": "Health",
+    "cat.reopening": "Reopening",
+    "cat.promotions": "Promotions",
     "cat.events": "Events",
     "report.blockedRoad": "Blocked road",
     "report.landslideRisk": "Landslide risk",

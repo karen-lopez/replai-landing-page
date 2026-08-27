@@ -16,21 +16,26 @@ export function colorForItem(item: MapItem): string {
   return "#C77F16"
 }
 
-/** Icono tipo "pin" con un punto de color. Se cachea por color. */
+/** Icono tipo "pin" (gota) con la punta anclada en la ubicación. Se cachea por color. */
 const iconCache = new Map<string, L.DivIcon>()
 
 export function pinIcon(color: string): L.DivIcon {
   const cached = iconCache.get(color)
   if (cached) return cached
+  // Pin tipo gota: círculo relleno que se estrecha en una punta inferior.
+  const html = `
+    <svg width="30" height="40" viewBox="0 0 30 40" xmlns="http://www.w3.org/2000/svg"
+      style="filter:drop-shadow(0 3px 4px rgba(0,0,0,0.35))">
+      <path d="M15 39C15 39 27 22.5 27 13.5C27 6.6 21.6 1 15 1C8.4 1 3 6.6 3 13.5C3 22.5 15 39 15 39Z"
+        fill="${color}" stroke="#ffffff" stroke-width="2.5" stroke-linejoin="round" />
+      <circle cx="15" cy="13.5" r="4.6" fill="#ffffff" />
+    </svg>`
   const icon = L.divIcon({
     className: "luzamiga-pin",
-    html: `<span style="
-      display:block;width:20px;height:20px;border-radius:9999px;
-      background:${color};border:3px solid #fff;
-      box-shadow:0 1px 4px rgba(0,0,0,0.35);"></span>`,
-    iconSize: [20, 20],
-    iconAnchor: [10, 10],
-    popupAnchor: [0, -12],
+    html,
+    iconSize: [30, 40],
+    iconAnchor: [15, 39],
+    popupAnchor: [0, -34],
   })
   iconCache.set(color, icon)
   return icon

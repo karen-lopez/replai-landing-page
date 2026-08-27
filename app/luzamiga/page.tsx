@@ -9,9 +9,9 @@ import { LuzAmigaEvents } from "@/components/luzamiga/events"
 import { LuzAmigaFooter } from "@/components/luzamiga/footer"
 
 export const metadata: Metadata = {
-  title: "Luz Amiga — Apoyo comunitario para el terremoto en Colombia",
+  title: "Luz Amiga — Reactivación del comercio tras el terremoto en Colombia",
   description:
-    "Un espacio de Replai para ofrecer y encontrar ayuda tras el terremoto en Colombia: insumos, búsqueda de personas, servicios de salud y eventos para sanar juntos. Mapa en tiempo real y disponible sin conexión.",
+    "Un espacio de Replai para reactivar el comercio tras el terremoto en Colombia: reaperturas, eventos y promociones de los negocios locales. Mapa en tiempo real y disponible sin conexión.",
   manifest: "/luzamiga/manifest.webmanifest",
 }
 

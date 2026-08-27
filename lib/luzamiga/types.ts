@@ -2,8 +2,8 @@ export type ItemKind = "help" | "event" | "userReport"
 
 export type ReportType = "blockedRoad" | "landslideRisk" | "safeZone"
 
-// Categorías reutilizadas de la sección Ofrece/Encuentra ayuda
-export type HelpCategory = "supplies" | "search" | "health" | "events"
+// Etiquetas de la sección Reactivando el Comercio
+export type HelpCategory = "reopening" | "events" | "promotions"
 
 export interface MapItem {
   id: string

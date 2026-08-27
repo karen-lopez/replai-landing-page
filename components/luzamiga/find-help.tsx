@@ -17,51 +17,51 @@ interface HelpListing {
 const LISTINGS: HelpListing[] = [
   {
     id: "1",
-    category: "supplies",
-    title: "Mercados y agua potable",
-    provider: "Fundación Manos Unidas",
-    location: "Armenia, Quindío",
-    description: "Entrega de mercados básicos, agua embotellada y kits de aseo para familias afectadas.",
+    category: "reopening",
+    title: "Panadería La Espiga reabre",
+    provider: "Panadería La Espiga",
+    location: "Pereira, Risaralda",
+    description: "Volvemos a hornear todos los días. Pan fresco, café y un espacio para reencontrarnos.",
   },
   {
     id: "2",
-    category: "supplies",
-    title: "Ropa y cobijas",
-    provider: "Colectivo Barrio Nuevo",
-    location: "Pereira, Risaralda",
-    description: "Ropa para adultos y niños, cobijas y colchonetas en buen estado.",
+    category: "reopening",
+    title: "Café Aroma vuelve a abrir",
+    provider: "Café Aroma",
+    location: "Medellín, Antioquia",
+    description: "Después del temblor reabrimos nuestras puertas con toda la energía. Te esperamos.",
   },
   {
     id: "3",
-    category: "search",
-    title: "Apoyo en búsqueda de personas",
-    provider: "Red de Voluntarios Café",
+    category: "promotions",
+    title: "2x1 en almuerzos esta semana",
+    provider: "Restaurante El Fogón",
     location: "Manizales, Caldas",
-    description: "Coordinamos reportes y difusión de personas y mascotas desaparecidas.",
+    description: "Apoya al comercio local: pide un almuerzo y el segundo va por nuestra cuenta.",
   },
   {
     id: "4",
-    category: "health",
-    title: "Consulta médica gratuita",
-    provider: "Brigada Salud Sin Fronteras",
-    location: "Armenia, Quindío",
-    description: "Atención médica general y curaciones sin costo para personas afectadas.",
+    category: "promotions",
+    title: "20% de descuento en ropa",
+    provider: "Almacén Vía Moda",
+    location: "Bogotá, Cundinamarca",
+    description: "Reactivamos la tienda con descuentos en toda la colección para adultos y niños.",
   },
   {
     id: "5",
-    category: "health",
-    title: "Acompañamiento psicológico",
-    provider: "Colectivo Mente Serena",
-    location: "En línea y presencial",
-    description: "Espacios de escucha y contención emocional, gratuitos, para adultos y niños.",
+    category: "events",
+    title: "Feria de emprendedores locales",
+    provider: "Cámara de Comercio",
+    location: "Pereira, Risaralda",
+    description: "Encuentro de negocios del barrio para reactivar las ventas. Entrada libre.",
   },
   {
     id: "6",
     category: "events",
-    title: "Círculo de la palabra",
-    provider: "Casa Cultural La Ceiba",
-    location: "Pereira, Risaralda",
-    description: "Encuentro comunitario para compartir, sanar y acompañarnos entre vecinos.",
+    title: "Mercado nocturno de comidas",
+    provider: "Asociación de Comerciantes",
+    location: "Manizales, Caldas",
+    description: "Los restaurantes locales se reúnen para una noche de sabores y música en vivo.",
   },
 ]
 
@@ -75,10 +75,11 @@ export function LuzAmigaFindHelp() {
       <div className="container mx-auto max-w-6xl px-4">
         <div className="mb-10 max-w-2xl">
           <h2 className="text-3xl font-bold tracking-tight text-balance md:text-4xl" style={{ color: "#3D3020" }}>
-            Encuentra ayuda
+            Explora el comercio
           </h2>
           <p className="mt-3 text-lg leading-relaxed" style={{ color: "#6B5B45" }}>
-            Explora el apoyo disponible en la comunidad. Filtra por categoría para encontrar lo que necesitas.
+            Descubre los negocios de la comunidad que se están reactivando. Filtra por etiqueta para ver reaperturas,
+            eventos y promociones.
           </p>
         </div>
 

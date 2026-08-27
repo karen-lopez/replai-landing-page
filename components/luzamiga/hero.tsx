@@ -34,8 +34,8 @@ export function LuzAmigaHero() {
             </h1>
 
             <p className="max-w-xl text-lg leading-relaxed md:text-xl" style={{ color: "#6B5B45" }}>
-              Un espacio hecho con cariño para las comunidades afectadas por el terremoto en Colombia. Aquí puedes ofrecer
-              tu ayuda o encontrar apoyo: insumos, búsqueda de personas, servicios de salud y momentos para sanar juntos.
+              Un espacio hecho con cariño para las comunidades afectadas por el terremoto en Colombia. Aquí los negocios
+              vuelven a abrir sus puertas: comparte reaperturas, eventos y promociones para reactivar el comercio local.
             </p>
 
             <div className="flex flex-col gap-4 sm:flex-row">
@@ -45,7 +45,7 @@ export function LuzAmigaHero() {
                 style={{ backgroundColor: "#D97706" }}
                 onClick={() => document.getElementById("ofrecer-ayuda")?.scrollIntoView({ behavior: "smooth" })}
               >
-                Quiero ofrecer ayuda
+                Publicar mi negocio
               </Button>
               <Button
                 size="lg"
@@ -54,7 +54,7 @@ export function LuzAmigaHero() {
                 style={{ borderColor: "#E4C79A", color: "#8A6D3B", backgroundColor: "transparent" }}
                 onClick={() => document.getElementById("encontrar-ayuda")?.scrollIntoView({ behavior: "smooth" })}
               >
-                Necesito ayuda
+                Explorar el comercio
               </Button>
             </div>
           </div>

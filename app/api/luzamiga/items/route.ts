@@ -10,7 +10,7 @@ import {
   REPORT_TYPES,
 } from "@/lib/luzamiga/types"
 
-const HELP_CATEGORIES: HelpCategory[] = ["supplies", "search", "health", "events"]
+const HELP_CATEGORIES: HelpCategory[] = ["reopening", "events", "promotions"]
 const MAX_TITLE = 120
 const MAX_DESC = 600
 
