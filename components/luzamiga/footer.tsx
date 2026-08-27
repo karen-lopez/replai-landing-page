@@ -3,7 +3,7 @@ import { Sun } from "lucide-react"
 
 export function LuzAmigaFooter() {
   return (
-    <footer className="py-12" style={{ backgroundColor: "#F4E9D4" }}>
+    <footer className="py-12" style={{ backgroundColor: "#F3E6CE" }}>
       <div className="container mx-auto max-w-3xl px-4 text-center">
         <div
           className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl"

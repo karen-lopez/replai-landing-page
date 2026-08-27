@@ -71,7 +71,7 @@ export function LuzAmigaFindHelp() {
   const visible = filter === "all" ? LISTINGS : LISTINGS.filter((l) => l.category === filter)
 
   return (
-    <section id="encontrar-ayuda" className="py-16 md:py-24" style={{ backgroundColor: "#FBF5EB" }}>
+    <section id="encontrar-ayuda" className="py-16 md:py-24" style={{ backgroundColor: "#FBF1E1" }}>
       <div className="container mx-auto max-w-6xl px-4">
         <div className="mb-10 max-w-2xl">
           <h2 className="text-3xl font-bold tracking-tight text-balance md:text-4xl" style={{ color: "#3D3020" }}>

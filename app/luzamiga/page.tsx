@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: "#FBF5EB",
+  themeColor: "#FBF1E1",
 }
 
 export default function LuzAmigaPage() {

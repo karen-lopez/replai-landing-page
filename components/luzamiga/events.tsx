@@ -56,7 +56,7 @@ const EVENTS: CommunityEvent[] = [
 
 export function LuzAmigaEvents() {
   return (
-    <section id="eventos" className="py-16 md:py-24" style={{ backgroundColor: "#FDFAF3" }}>
+    <section id="eventos" className="py-16 md:py-24" style={{ backgroundColor: "#FFFFFF" }}>
       <div className="container mx-auto max-w-5xl px-4">
         <div className="mb-10 max-w-2xl">
           <h2 className="text-3xl font-bold tracking-tight text-balance md:text-4xl" style={{ color: "#3D3020" }}>
@@ -76,7 +76,7 @@ export function LuzAmigaEvents() {
             >
               <span
                 className="w-fit rounded-full px-3 py-1 text-xs font-semibold"
-                style={{ backgroundColor: "#FAEBB8", color: "#A16207" }}
+                style={{ backgroundColor: "#E3EAF8", color: "#3F6BB0" }}
               >
                 {event.type}
               </span>

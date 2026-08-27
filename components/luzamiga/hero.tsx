@@ -6,7 +6,7 @@ import { Sun } from "lucide-react"
 
 export function LuzAmigaHero() {
   return (
-    <section className="relative overflow-hidden" style={{ backgroundColor: "#FBF5EB" }}>
+    <section className="relative overflow-hidden" style={{ backgroundColor: "#FBF1E1" }}>
       {/* Soft warm glow, not a filler blob but a gentle light source */}
       <div
         className="pointer-events-none absolute -top-32 right-0 h-96 w-96 rounded-full opacity-40 blur-3xl"

@@ -20,7 +20,7 @@ export function LuzAmigaOfferHelp() {
   }
 
   return (
-    <section id="ofrecer-ayuda" className="py-16 md:py-24" style={{ backgroundColor: "#FDFAF3" }}>
+    <section id="ofrecer-ayuda" className="py-16 md:py-24" style={{ backgroundColor: "#FFFFFF" }}>
       <div className="container mx-auto max-w-5xl px-4">
         <div className="mb-10 max-w-2xl">
           <h2 className="text-3xl font-bold tracking-tight text-balance md:text-4xl" style={{ color: "#3D3020" }}>

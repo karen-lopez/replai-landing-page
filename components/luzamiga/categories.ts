@@ -18,32 +18,36 @@ export const CATEGORIES: Category[] = [
     label: "Insumos",
     description: "Comida, agua, medicinas y ropa para quienes lo necesitan.",
     icon: Package,
-    color: "#D97706",
-    tint: "#FDEBCF",
+    // Miel cálido
+    color: "#C77F16",
+    tint: "#FBEFD6",
   },
   {
     id: "search",
     label: "Búsqueda",
     description: "Ayuda a encontrar personas o mascotas desaparecidas.",
     icon: Search,
-    color: "#C2410C",
-    tint: "#FBDFD0",
+    // Coral suave
+    color: "#C85A38",
+    tint: "#FBE4DB",
   },
   {
     id: "health",
     label: "Servicios de salud",
     description: "Atención física y mental, gratuita para personas afectadas.",
     icon: HeartPulse,
-    color: "#B45309",
-    tint: "#FBE3C4",
+    // Verde salvia (transmite calma y salud)
+    color: "#3E8E76",
+    tint: "#DDF0E9",
   },
   {
     id: "events",
     label: "Eventos culturales",
     description: "Actividades para acompañar en momentos de incertidumbre.",
     icon: CalendarHeart,
-    color: "#A16207",
-    tint: "#FAEBB8",
+    // Azul suave (sereno y amable)
+    color: "#3F6BB0",
+    tint: "#E3EAF8",
   },
 ]
 
