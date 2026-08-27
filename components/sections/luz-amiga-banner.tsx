@@ -10,46 +10,50 @@ export function LuzAmigaBanner() {
   if (!visible) return null
 
   return (
-    <div className="fixed inset-x-0 top-4 z-50 flex justify-center px-4 pointer-events-none">
+    <div className="fixed bottom-4 right-4 z-50 max-w-[calc(100vw-2rem)] w-80">
       <div
-        className="pointer-events-auto flex items-center gap-3 rounded-full border py-2 pl-4 pr-2 shadow-lg backdrop-blur"
+        className="relative rounded-2xl border p-4 pr-9 shadow-xl backdrop-blur"
         style={{ backgroundColor: "#FFFDF8", borderColor: "#EAD9B8" }}
         role="region"
         aria-label="Iniciativa comunitaria Luz Amiga"
       >
-        <span
-          className="hidden sm:inline-flex h-8 w-8 items-center justify-center rounded-full shrink-0"
-          style={{ backgroundColor: "#FBEFD6", color: "#9A5E10" }}
-          aria-hidden="true"
-        >
-          <HeartHandshake className="h-4 w-4" />
-        </span>
-
-        <p className="text-sm leading-snug" style={{ color: "#7A5C33" }}>
-          <span className="font-semibold" style={{ color: "#5C3A0E" }}>
-            Luz Amiga
-          </span>
-          <span className="hidden sm:inline">{" — Apoyo gratuito para la comunidad afectada por el terremoto en Pereira."}</span>
-        </p>
-
-        <Link
-          href="/luzamiga"
-          className="inline-flex items-center gap-1.5 rounded-full font-semibold text-sm px-4 py-2 transition-colors shrink-0"
-          style={{ backgroundColor: "#C77F16", color: "#FFFFFF" }}
-        >
-          Ver más
-          <ArrowRight className="h-4 w-4" aria-hidden="true" />
-        </Link>
-
         <button
           type="button"
           onClick={() => setVisible(false)}
-          className="inline-flex h-8 w-8 items-center justify-center rounded-full transition-colors shrink-0 hover:bg-[#FBEFD6]"
+          className="absolute top-2 right-2 inline-flex h-7 w-7 items-center justify-center rounded-full transition-colors hover:bg-[#FBEFD6]"
           style={{ color: "#9A5E10" }}
           aria-label="Cerrar aviso"
         >
           <X className="h-4 w-4" aria-hidden="true" />
         </button>
+
+        <div className="flex items-start gap-3">
+          <span
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full shrink-0"
+            style={{ backgroundColor: "#FBEFD6", color: "#9A5E10" }}
+            aria-hidden="true"
+          >
+            <HeartHandshake className="h-5 w-5" />
+          </span>
+
+          <div>
+            <p className="font-semibold text-sm" style={{ color: "#5C3A0E" }}>
+              Luz Amiga
+            </p>
+            <p className="mt-1 text-sm leading-snug" style={{ color: "#7A5C33" }}>
+              {"Apoyo gratuito para la comunidad afectada por el terremoto en Pereira."}
+            </p>
+          </div>
+        </div>
+
+        <Link
+          href="/luzamiga"
+          className="mt-3 inline-flex w-full items-center justify-center gap-1.5 rounded-full font-semibold text-sm px-4 py-2 transition-colors"
+          style={{ backgroundColor: "#C77F16", color: "#FFFFFF" }}
+        >
+          Ver más
+          <ArrowRight className="h-4 w-4" aria-hidden="true" />
+        </Link>
       </div>
     </div>
   )
