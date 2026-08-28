@@ -10,6 +10,7 @@ import { OfflineSync } from "./offline/offline-sync"
 import { AccessibilityWidget } from "@/components/accessibility-widget"
 import { CityFilterProvider } from "./city-filter-provider"
 import { CityFilterSwitcher } from "./city-filter-switcher"
+import { ChatWidget } from "./chat/chat-widget"
 
 /**
  * Barra superior de /luzamiga: selector de idioma + ciudad (izq.) y auth
@@ -39,6 +40,7 @@ export function LuzAmigaShell({ children }: { children: React.ReactNode }) {
           <LoginDialog />
           <RegisterDialog />
           <AccessibilityWidget />
+          <ChatWidget />
         </CityFilterProvider>
       </AuthProvider>
     </LanguageProvider>
