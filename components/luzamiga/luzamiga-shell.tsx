@@ -7,6 +7,7 @@ import { AuthBar } from "./auth/auth-bar"
 import { LoginDialog } from "./auth/login-dialog"
 import { RegisterDialog } from "./auth/register-dialog"
 import { OfflineSync } from "./offline/offline-sync"
+import { AccessibilityWidget } from "@/components/accessibility-widget"
 
 /**
  * Barra superior de /luzamiga: selector de idioma (izq.) y auth (der.).
@@ -31,6 +32,7 @@ export function LuzAmigaShell({ children }: { children: React.ReactNode }) {
 
         <LoginDialog />
         <RegisterDialog />
+        <AccessibilityWidget />
       </AuthProvider>
     </LanguageProvider>
   )

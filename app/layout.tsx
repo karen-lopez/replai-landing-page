@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import { Plus_Jakarta_Sans } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
-import { AccessibilityWidget } from '@/components/accessibility-widget'
 import './globals.css'
 
 const plusJakartaSans = Plus_Jakarta_Sans({ 
@@ -45,7 +44,6 @@ export default function RootLayout({
     <html lang="es" className="scroll-smooth">
       <body className={`${plusJakartaSans.variable} font-sans antialiased`}>
         {children}
-        <AccessibilityWidget />
         <Analytics />
       </body>
     </html>
