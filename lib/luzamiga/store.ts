@@ -1,0 +1,208 @@
+import type { MapItem } from "./types"
+
+/**
+ * Store en memoria (singleton por proceso). No apto para producción:
+ * los datos se reinician si el servidor se reinicia.
+ * Usamos globalThis para sobrevivir al hot-reload de desarrollo.
+ */
+interface LuzAmigaStore {
+  items: MapItem[]
+  updatedAt: number
+}
+
+const g = globalThis as unknown as { __luzAmigaStore?: LuzAmigaStore }
+
+function seed(): MapItem[] {
+  const now = Date.now()
+  const at = (minsAgo: number) => new Date(now - minsAgo * 60_000).toISOString()
+
+  return [
+    // ---- Reactivando el comercio (help) ----
+    {
+      id: "help-1",
+      kind: "help",
+      category: "reopening",
+      title: "Panadería La Espiga reabre",
+      description: "Volvemos a hornear todos los días. ¡Gracias por acompañarnos en este nuevo comienzo!",
+      author: "Panadería La Espiga",
+      contact: "WhatsApp 300 123 4567",
+      city: "Pereira",
+      lat: 4.8133,
+      lng: -75.6961,
+      createdAt: at(35),
+      status: "active",
+    },
+    {
+      id: "help-2",
+      kind: "help",
+      category: "promotions",
+      title: "2x1 en almuerzos esta semana",
+      description: "Apoya al comercio local: pide un almuerzo y el segundo va por nuestra cuenta.",
+      author: "Restaurante El Fogón",
+      contact: "310 555 8899",
+      city: "Manizales",
+      lat: 5.07,
+      lng: -75.5138,
+      createdAt: at(80),
+      status: "active",
+    },
+    {
+      id: "help-3",
+      kind: "help",
+      category: "promotions",
+      title: "20% de descuento en ropa",
+      description: "Reactivamos la tienda con descuentos en toda la colección para adultos y niños.",
+      author: "Almacén Vía Moda",
+      contact: "312 444 7788",
+      city: "Bogotá",
+      lat: 4.711,
+      lng: -74.0721,
+      createdAt: at(120),
+      status: "active",
+    },
+    {
+      id: "help-4",
+      kind: "help",
+      category: "reopening",
+      title: "Café Aroma vuelve a abrir",
+      description: "Después del temblor, reabrimos con energía. Ven a tomarte un café con nosotros.",
+      author: "Café Aroma",
+      contact: "320 444 1212",
+      city: "Medellín",
+      lat: 6.2442,
+      lng: -75.5812,
+      createdAt: at(20),
+      status: "active",
+    },
+    {
+      id: "help-5",
+      kind: "help",
+      category: "promotions",
+      title: "Ferretería con precios especiales",
+      description: "Materiales de construcción y reparación con descuento para quienes reconstruyen.",
+      author: "Ferretería El Tornillo",
+      contact: "315 222 9090",
+      city: "Cali",
+      lat: 3.4516,
+      lng: -76.532,
+      createdAt: at(200),
+      status: "active",
+    },
+    {
+      id: "help-6",
+      kind: "help",
+      category: "reopening",
+      title: "Mercado de barrio operando",
+      description: "Nuestras tiendas del mercado ya atienden con normalidad. ¡Vuelve a visitarnos!",
+      author: "Plaza de Mercado La Cosecha",
+      contact: "línea 144",
+      city: "Armenia",
+      lat: 4.5339,
+      lng: -75.6811,
+      createdAt: at(55),
+      status: "active",
+    },
+
+    // ---- Eventos del comercio (event) ----
+    {
+      id: "event-1",
+      kind: "event",
+      category: "events",
+      title: "Feria de emprendedores locales",
+      description: "Encuentro de negocios del barrio para reactivar las ventas. Entrada libre.",
+      author: "Cámara de Comercio",
+      contact: "Parque Bolívar, 4:00 p.m.",
+      city: "Pereira",
+      lat: 4.8087,
+      lng: -75.69,
+      createdAt: at(90),
+      status: "active",
+    },
+    {
+      id: "event-2",
+      kind: "event",
+      category: "events",
+      title: "Mercado nocturno de comidas",
+      description: "Los restaurantes locales se reúnen para una noche de sabores y música en vivo.",
+      author: "Asociación de Comerciantes",
+      contact: "Plaza principal, sábado 6:00 p.m.",
+      city: "Manizales",
+      lat: 5.0645,
+      lng: -75.5074,
+      createdAt: at(140),
+      status: "active",
+    },
+    {
+      id: "event-3",
+      kind: "event",
+      category: "events",
+      title: "Bazar artesanal por la reactivación",
+      description: "Artesanas y artesanos muestran su trabajo para reactivar la economía del sector.",
+      author: "Colectivo Manos del Quindío",
+      contact: "Parque del Café, domingo 10:00 a.m.",
+      city: "Armenia",
+      lat: 4.5289,
+      lng: -75.6743,
+      createdAt: at(160),
+      status: "active",
+    },
+
+    // ---- Reportes ciudadanos (userReport) ----
+    {
+      id: "report-1",
+      kind: "userReport",
+      reportType: "safeZone",
+      title: "Zona segura: coliseo municipal",
+      description: "Espacio amplio y estable habilitado como punto de encuentro seguro.",
+      city: "Pereira",
+      lat: 4.8156,
+      lng: -75.6944,
+      createdAt: at(45),
+      status: "active",
+    },
+    {
+      id: "report-2",
+      kind: "userReport",
+      reportType: "blockedRoad",
+      title: "Vía bloqueada por escombros",
+      description: "Paso cerrado por caída de material. Buscar ruta alterna.",
+      city: "Manizales",
+      lat: 5.055,
+      lng: -75.52,
+      createdAt: at(30),
+      status: "active",
+    },
+    {
+      id: "report-3",
+      kind: "userReport",
+      reportType: "landslideRisk",
+      title: "Riesgo de derrumbe en ladera",
+      description: "Grietas visibles en el terreno. Evitar la zona y reportar a autoridades.",
+      city: "Medellín",
+      lat: 6.2518,
+      lng: -75.5636,
+      createdAt: at(15),
+      status: "active",
+    },
+  ]
+}
+
+function getStore(): LuzAmigaStore {
+  if (!g.__luzAmigaStore) {
+    g.__luzAmigaStore = { items: seed(), updatedAt: Date.now() }
+  }
+  return g.__luzAmigaStore
+}
+
+export function getItems(kind?: string): { items: MapItem[]; serverTime: number } {
+  const store = getStore()
+  const items = kind ? store.items.filter((i) => i.kind === kind) : store.items
+  return { items, serverTime: Date.now() }
+}
+
+export function addItem(item: MapItem): MapItem {
+  const store = getStore()
+  store.items.unshift(item)
+  store.updatedAt = Date.now()
+  return item
+}
