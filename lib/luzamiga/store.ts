@@ -1,5 +1,50 @@
 import type { HelpCategory, MapItem } from "./types"
-import earthquakeData from "@/data/terremoto-17-agosto-2023.json"
+import rawEarthquakeData from "@/data/terremoto-17-agosto-2023.json"
+
+type DatasetCity = {
+  municipality: string
+  latitude: number
+  longitude: number
+  reportedEffects: string[]
+}
+
+type HistoricalEvent = {
+  id: string
+  date: string
+  title: string
+  affectedCities: DatasetCity[]
+}
+
+type CulturalEvent = {
+  id: string
+  title: string
+  municipality: string
+  venue: string
+  date: string
+  organizer: string
+  description: string
+  latitude: number
+  longitude: number
+}
+
+type Business = {
+  id: string
+  name: string
+  municipality: string
+  category: string
+  contact: string
+  description: string
+  address: string
+  latitude: number
+  longitude: number
+}
+
+const earthquakeData = rawEarthquakeData as {
+  culturalEvents: CulturalEvent[]
+  businesses: Business[]
+  affectedCities: DatasetCity[]
+  historicalEvents: HistoricalEvent[]
+}
 
 /**
  * Store en memoria (singleton por proceso). No apto para producción:
@@ -13,14 +58,42 @@ interface LuzAmigaStore {
 }
 
 const g = globalThis as unknown as { __luzAmigaStore?: LuzAmigaStore }
-const SEED_VERSION = 5
+const SEED_VERSION = 7
+const ALLOWED_CITIES = new Set(["armenia", "cali", "manizales", "pereira", "quibdo"])
+const LEGACY_SEED_IDS = new Set([
+  "help-1",
+  "help-2",
+  "help-3",
+  "help-4",
+  "help-5",
+  "help-6",
+  "event-1",
+  "event-2",
+  "event-3",
+  "cultural-villavicencio-1",
+  "cultural-quetame-1",
+  "cultural-guayabetal-1",
+  "cultural-san-juanito-1",
+  "cultural-bogota-1",
+  "cultural-soacha-1",
+  "business-villavicencio-1",
+  "business-quetame-1",
+  "business-guayabetal-1",
+  "business-san-juanito-1",
+  "business-bogota-1",
+  "business-soacha-1",
+])
+
+function normalizeCity(value: string) {
+  return value.toLocaleLowerCase("es").normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+}
 
 function seed(): MapItem[] {
   const now = Date.now()
   const at = (minsAgo: number) => new Date(now - minsAgo * 60_000).toISOString()
   const reportTypes = ["landslideRisk", "blockedRoad", "safeZone"] as const
 
-  return [
+  const items: MapItem[] = [
     // ---- Reactivando el comercio (help) ----
     {
       id: "help-1",
@@ -208,6 +281,13 @@ function seed(): MapItem[] {
       })),
     ),
   ]
+
+  return items.filter(
+    (item) =>
+      item.kind === "userReport" ||
+      (ALLOWED_CITIES.has(normalizeCity(item.city ?? "")) &&
+        !["help-1", "help-2", "help-3", "help-4", "help-5", "help-6", "event-1", "event-2", "event-3"].includes(item.id)),
+  )
 }
 
 function getStore(): LuzAmigaStore {
@@ -215,6 +295,7 @@ function getStore(): LuzAmigaStore {
     g.__luzAmigaStore = { items: seed(), updatedAt: Date.now(), seedVersion: SEED_VERSION }
   } else if (g.__luzAmigaStore.seedVersion !== SEED_VERSION) {
     const store = g.__luzAmigaStore
+    store.items = store.items.filter((item) => !LEGACY_SEED_IDS.has(item.id))
     const existingIds = new Set(store.items.map((item) => item.id))
     const missingSeedItems = seed().filter((item) => !existingIds.has(item.id))
     store.items.push(...missingSeedItems)
