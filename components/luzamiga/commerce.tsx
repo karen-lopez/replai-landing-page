@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { CATEGORIES, CATEGORY_MAP, type CategoryId } from "./categories"
 import { ChevronLeft, ChevronRight, Map, MapPin, Phone, Store, UserPlus } from "lucide-react"
@@ -9,10 +9,9 @@ import { useAuth } from "./auth/auth-provider"
 import { useT } from "./i18n/language-provider"
 import { MunicipalityAutocomplete } from "./municipality-autocomplete"
 import { PublishListingDialog } from "./publish-listing-dialog"
+import { SCOPED_MUNICIPALITIES } from "@/lib/luzamiga/municipalities"
 
 const PAGE_SIZE = 3
-const MUNICIPALITIES_URL = "https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json"
-const FALLBACK_MUNICIPALITIES = ["Bogotá", "Manizales", "Medellín", "Pereira", "Cali", "Armenia"]
 
 export function LuzAmigaCommerce() {
   const { user, openRegister } = useAuth()
@@ -20,26 +19,9 @@ export function LuzAmigaCommerce() {
   const [filter, setFilter] = useState<CategoryId | "all">("all")
   const [page, setPage] = useState(1)
   const [municipality, setMunicipality] = useState("")
-  const [municipalities, setMunicipalities] = useState(FALLBACK_MUNICIPALITIES)
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [publishOpen, setPublishOpen] = useState(false)
   const { items } = useItems()
-
-  useEffect(() => {
-    let active = true
-    fetch(MUNICIPALITIES_URL)
-      .then((response) => (response.ok ? response.json() : Promise.reject(new Error("catalog-failed"))))
-      .then((departments: Array<{ ciudades?: string[] }>) => {
-        const names = [...new Set(departments.flatMap((department) => department.ciudades ?? []))].sort((a, b) =>
-          a.localeCompare(b, "es"),
-        )
-        if (active && names.length) setMunicipalities(names)
-      })
-      .catch(() => {})
-    return () => {
-      active = false
-    }
-  }, [])
 
   const listings = items.filter((item) => item.kind === "help" || item.kind === "event")
   const normalizedMunicipality = municipality.trim().toLocaleLowerCase("es").normalize("NFD").replace(/[̀-ͯ]/g, "")
@@ -134,13 +116,11 @@ export function LuzAmigaCommerce() {
             id="municipality-filter"
             value={municipality}
             onChange={changeMunicipality}
-            municipalities={municipalities}
+            municipalities={SCOPED_MUNICIPALITIES}
             placeholder="Buscar municipio de Colombia"
           />
           <p className="mt-2 text-xs text-[#8A7659]">
-            {municipalities.length > FALLBACK_MUNICIPALITIES.length
-              ? `${municipalities.length} municipios disponibles`
-              : "Cargando municipios de Colombia..."}
+            {SCOPED_MUNICIPALITIES.length} municipios disponibles
           </p>
         </div>
 
