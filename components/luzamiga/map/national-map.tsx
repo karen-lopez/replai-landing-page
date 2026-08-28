@@ -1,8 +1,8 @@
 "use client"
 
 import dynamic from "next/dynamic"
-import { useMemo, useState } from "react"
-import { MapPin, Radio, WifiOff, Loader2 } from "lucide-react"
+import { useEffect, useMemo, useState } from "react"
+import { AlertTriangle, BarChart3, Building2, Loader2, MapPin, Radio, Search, WifiOff, X } from "lucide-react"
 import { useItems } from "./use-items"
 import { colorForItem } from "./marker-icons"
 import { CATEGORIES } from "../categories"
@@ -18,12 +18,37 @@ const LeafletMap = dynamic(() => import("./leaflet-map"), {
   ),
 })
 
+const MUNICIPALITIES_URL = "https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json"
+const FALLBACK_MUNICIPALITIES = ["Bogotá", "Manizales", "Medellín", "Pereira", "Cali", "Armenia"]
+
+function normalize(value: string) {
+  return value.toLocaleLowerCase("es").normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+}
+
 export function NationalMap() {
   const { t, lang } = useT()
   const { items, serverTime, online } = useItems()
   const [userPosition, setUserPosition] = useState<{ lat: number; lng: number } | null>(null)
   const [locating, setLocating] = useState(false)
   const [geoError, setGeoError] = useState<string | null>(null)
+  const [municipality, setMunicipality] = useState("")
+  const [activeMunicipality, setActiveMunicipality] = useState("")
+  const [municipalities, setMunicipalities] = useState(FALLBACK_MUNICIPALITIES)
+  const [localityPosition, setLocalityPosition] = useState<{ lat: number; lng: number } | null>(null)
+  const [analyzing, setAnalyzing] = useState(false)
+  const [analysisError, setAnalysisError] = useState<string | null>(null)
+
+  useEffect(() => {
+    let active = true
+    fetch(MUNICIPALITIES_URL)
+      .then((response) => (response.ok ? response.json() : Promise.reject(new Error("catalog-failed"))))
+      .then((departments: Array<{ ciudades?: string[] }>) => {
+        const names = [...new Set(departments.flatMap((department) => department.ciudades ?? []))].sort((a, b) => a.localeCompare(b, "es"))
+        if (active && names.length) setMunicipalities(names)
+      })
+      .catch(() => {})
+    return () => { active = false }
+  }, [])
 
   const labelForItem = useMemo(
     () => (item: MapItem) => {
@@ -54,6 +79,43 @@ export function NationalMap() {
       { enableHighAccuracy: true, timeout: 10_000 },
     )
   }
+
+  async function analyzeLocality() {
+    const selected = municipality.trim()
+    if (!selected) {
+      setAnalysisError("Escribe o selecciona un municipio para analizarlo.")
+      return
+    }
+    setAnalyzing(true)
+    setAnalysisError(null)
+    try {
+      const params = new URLSearchParams({ format: "jsonv2", q: `${selected}, Colombia`, limit: "1", countrycodes: "co" })
+      const response = await fetch(`https://nominatim.openstreetmap.org/search?${params}`)
+      if (!response.ok) throw new Error("geocode-failed")
+      const results = await response.json()
+      if (!results[0]) throw new Error("municipality-not-found")
+      setActiveMunicipality(selected)
+      setLocalityPosition({ lat: Number(results[0].lat), lng: Number(results[0].lon) })
+    } catch {
+      setAnalysisError("No pudimos ubicar ese municipio. Revisa el nombre e inténtalo de nuevo.")
+    } finally {
+      setAnalyzing(false)
+    }
+  }
+
+  function clearLocality() {
+    setMunicipality("")
+    setActiveMunicipality("")
+    setLocalityPosition(null)
+    setAnalysisError(null)
+  }
+
+  const mapItems = activeMunicipality
+    ? items.filter((item) => normalize(`${item.city ?? ""} ${item.address ?? ""}`).includes(normalize(activeMunicipality)))
+    : items
+  const localityReports = mapItems.filter((item) => item.kind === "userReport")
+  const localityBusinesses = mapItems.filter((item) => item.kind === "help")
+  const localityEvents = mapItems.filter((item) => item.kind === "event" || item.category === "events")
 
   const lastUpdate = serverTime
     ? new Intl.DateTimeFormat(lang === "es" ? "es-CO" : "en-US", {
@@ -109,11 +171,78 @@ export function NationalMap() {
           </p>
         ) : null}
 
+        <div className="mb-4 rounded-2xl border border-[#EAD9B8] bg-white p-4 shadow-sm">
+          <div className="flex flex-col gap-3 md:flex-row md:items-end">
+            <div className="min-w-0 flex-1">
+              <label htmlFor="locality-analysis" className="mb-2 block text-sm font-semibold text-[#3A2E1A]">
+                Analizar por localidad
+              </label>
+              <div className="relative">
+                <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8A7659]" aria-hidden="true" />
+                <input
+                  id="locality-analysis"
+                  list="map-colombia-municipalities"
+                  value={municipality}
+                  onChange={(event) => setMunicipality(event.target.value)}
+                  onKeyDown={(event) => { if (event.key === "Enter") analyzeLocality() }}
+                  placeholder="Busca un municipio de Colombia"
+                  className="h-11 w-full rounded-full border bg-[#FFFDF8] pl-11 pr-10 text-sm text-[#3A2E1A] outline-none focus:ring-2 focus:ring-[#4A7C59]"
+                  style={{ borderColor: "#E4C79A" }}
+                />
+                <datalist id="map-colombia-municipalities">
+                  {municipalities.map((name) => <option key={name} value={name} />)}
+                </datalist>
+                {municipality ? (
+                  <button type="button" onClick={clearLocality} className="absolute right-3 top-1/2 inline-flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full text-[#8A7659] hover:bg-[#F1E4CC]" aria-label="Limpiar localidad">
+                    <X className="h-4 w-4" aria-hidden="true" />
+                  </button>
+                ) : null}
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={analyzeLocality}
+              disabled={analyzing}
+              className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-[#2E7D61] px-5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#24664F] disabled:opacity-60"
+            >
+              {analyzing ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <BarChart3 className="h-4 w-4" aria-hidden="true" />}
+              {analyzing ? "Analizando..." : "Analizar localidad"}
+            </button>
+          </div>
+          {analysisError ? <p className="mt-3 rounded-lg bg-[#FCE4E4] px-3 py-2 text-sm text-[#B4231F]" role="alert">{analysisError}</p> : null}
+        </div>
+
+        {activeMunicipality ? (
+          <div className="mb-4" aria-label={`Análisis de ${activeMunicipality}`}>
+            <div className="grid gap-3 sm:grid-cols-3">
+              <AnalysisCard icon={<Building2 className="h-5 w-5" aria-hidden="true" />} label="Comercios" value={localityBusinesses.length} />
+              <AnalysisCard icon={<MapPin className="h-5 w-5" aria-hidden="true" />} label="Eventos" value={localityEvents.length} />
+              <AnalysisCard icon={<AlertTriangle className="h-5 w-5" aria-hidden="true" />} label="Reportes" value={localityReports.length} />
+            </div>
+            <div className="mt-3 rounded-xl border border-[#EAD9B8] bg-white p-4">
+              <h3 className="text-sm font-bold text-[#3A2E1A]">Lugares reportados en {activeMunicipality}</h3>
+              {localityReports.length ? (
+                <ul className="mt-3 grid gap-2 sm:grid-cols-2">
+                  {localityReports.map((report) => (
+                    <li key={report.id} className="rounded-lg bg-[#FFF8EC] px-3 py-2 text-sm">
+                      <p className="font-semibold text-[#3A2E1A]">{report.title}</p>
+                      <p className="mt-1 text-[#6B5E48]">{report.address ?? report.city ?? "Ubicación reconocida"}</p>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="mt-2 text-sm text-[#6B5E48]">No hay reportes registrados en este municipio.</p>
+              )}
+            </div>
+          </div>
+        ) : null}
+
         <div className="overflow-hidden rounded-2xl border border-[#EAD9B8] shadow-sm">
           <div className="h-[420px] w-full md:h-[520px]">
             <LeafletMap
-              items={items}
+              items={mapItems}
               userPosition={userPosition}
+              mapCenter={localityPosition}
               labelForItem={labelForItem}
               contactLabel={t("map.contact")}
             />
@@ -140,5 +269,14 @@ export function NationalMap() {
         </div>
       </div>
     </section>
+  )
+}
+
+function AnalysisCard({ icon, label, value }: { icon: React.ReactNode; label: string; value: number }) {
+  return (
+    <div className="flex items-center gap-3 rounded-xl border border-[#EAD9B8] bg-white px-4 py-3">
+      <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#E5F2EC] text-[#2E7D61]">{icon}</span>
+      <div><p className="text-xs text-[#8A7659]">{label}</p><p className="text-xl font-bold text-[#3A2E1A]">{value}</p></div>
+    </div>
   )
 }

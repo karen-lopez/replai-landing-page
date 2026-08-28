@@ -20,6 +20,8 @@ export interface MapItem {
   contact?: string
   /** Ciudad o municipio */
   city?: string
+  /** Dirección reconocida a partir de las coordenadas del negocio */
+  address?: string
   lat: number
   lng: number
   createdAt: string

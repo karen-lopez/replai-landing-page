@@ -88,6 +88,7 @@ export async function POST(req: NextRequest) {
     author: body.author ? String(body.author).slice(0, 120) : user?.name,
     contact: body.contact ? String(body.contact).slice(0, 160) : undefined,
     city: body.city ? String(body.city).slice(0, 80) : user?.city,
+    address: body.address ? String(body.address).slice(0, 240) : undefined,
     lat,
     lng,
     createdAt: new Date().toISOString(),

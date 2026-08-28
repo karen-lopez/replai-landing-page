@@ -1,74 +1,63 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { CATEGORIES, CATEGORY_MAP, type CategoryId } from "./categories"
-import { MapPin } from "lucide-react"
+import { ChevronLeft, ChevronRight, ExternalLink, Map, MapPin, Phone, Search, X } from "lucide-react"
+import type { MapItem } from "@/lib/luzamiga/types"
+import { useItems } from "./map/use-items"
+import dynamic from "next/dynamic"
 
-interface HelpListing {
-  id: string
-  category: CategoryId
-  title: string
-  provider: string
-  location: string
-  description: string
-}
+const MiniLocationMap = dynamic(() => import("./map/mini-location-map").then((module) => module.MiniLocationMap), {
+  ssr: false,
+})
 
-// Sample listings. This array can later be replaced by data fetched from a database.
-const LISTINGS: HelpListing[] = [
-  {
-    id: "1",
-    category: "reopening",
-    title: "Panadería La Espiga reabre",
-    provider: "Panadería La Espiga",
-    location: "Pereira, Risaralda",
-    description: "Volvemos a hornear todos los días. Pan fresco, café y un espacio para reencontrarnos.",
-  },
-  {
-    id: "2",
-    category: "reopening",
-    title: "Café Aroma vuelve a abrir",
-    provider: "Café Aroma",
-    location: "Medellín, Antioquia",
-    description: "Después del temblor reabrimos nuestras puertas con toda la energía. Te esperamos.",
-  },
-  {
-    id: "3",
-    category: "promotions",
-    title: "2x1 en almuerzos esta semana",
-    provider: "Restaurante El Fogón",
-    location: "Manizales, Caldas",
-    description: "Apoya al comercio local: pide un almuerzo y el segundo va por nuestra cuenta.",
-  },
-  {
-    id: "4",
-    category: "promotions",
-    title: "20% de descuento en ropa",
-    provider: "Almacén Vía Moda",
-    location: "Bogotá, Cundinamarca",
-    description: "Reactivamos la tienda con descuentos en toda la colección para adultos y niños.",
-  },
-  {
-    id: "5",
-    category: "events",
-    title: "Feria de emprendedores locales",
-    provider: "Cámara de Comercio",
-    location: "Pereira, Risaralda",
-    description: "Encuentro de negocios del barrio para reactivar las ventas. Entrada libre.",
-  },
-  {
-    id: "6",
-    category: "events",
-    title: "Mercado nocturno de comidas",
-    provider: "Asociación de Comerciantes",
-    location: "Manizales, Caldas",
-    description: "Los restaurantes locales se reúnen para una noche de sabores y música en vivo.",
-  },
-]
+const PAGE_SIZE = 3
+const MUNICIPALITIES_URL = "https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json"
+const FALLBACK_MUNICIPALITIES = ["Bogotá", "Manizales", "Medellín", "Pereira", "Cali", "Armenia"]
 
 export function LuzAmigaFindHelp() {
   const [filter, setFilter] = useState<CategoryId | "all">("all")
+  const [page, setPage] = useState(1)
+  const [municipality, setMunicipality] = useState("")
+  const [municipalities, setMunicipalities] = useState(FALLBACK_MUNICIPALITIES)
+  const { items } = useItems()
 
-  const visible = filter === "all" ? LISTINGS : LISTINGS.filter((l) => l.category === filter)
+  useEffect(() => {
+    let active = true
+    fetch(MUNICIPALITIES_URL)
+      .then((response) => (response.ok ? response.json() : Promise.reject(new Error("catalog-failed"))))
+      .then((departments: Array<{ ciudades?: string[] }>) => {
+        const names = [...new Set(departments.flatMap((department) => department.ciudades ?? []))].sort((a, b) =>
+          a.localeCompare(b, "es"),
+        )
+        if (active && names.length) setMunicipalities(names)
+      })
+      .catch(() => {})
+    return () => {
+      active = false
+    }
+  }, [])
+
+  const listings = items.filter((item) => item.kind === "help" || item.kind === "event")
+  const normalizedMunicipality = municipality.trim().toLocaleLowerCase("es").normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+  const filtered = listings.filter((item) => {
+    const matchesCategory = filter === "all" || item.category === filter
+    const searchableLocation = `${item.city ?? ""} ${item.address ?? ""}`.toLocaleLowerCase("es").normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    return matchesCategory && (!normalizedMunicipality || searchableLocation.includes(normalizedMunicipality))
+  })
+  const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
+  const currentPage = Math.min(page, pageCount)
+  const visible = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
+
+  function changeFilter(nextFilter: CategoryId | "all") {
+    setFilter(nextFilter)
+    setPage(1)
+  }
+
+  function changeMunicipality(value: string) {
+    setMunicipality(value)
+    setPage(1)
+  }
 
   return (
     <section id="encontrar-ayuda" className="py-16 md:py-24" style={{ backgroundColor: "#FBF1E1" }}>
@@ -85,7 +74,7 @@ export function LuzAmigaFindHelp() {
 
         {/* Filters */}
         <div className="mb-8 flex flex-wrap gap-2">
-          <FilterChip active={filter === "all"} color="#8A6D3B" tint="#F1E4CC" onClick={() => setFilter("all")}>
+          <FilterChip active={filter === "all"} color="#8A6D3B" tint="#F1E4CC" onClick={() => changeFilter("all")}>
             Todo
           </FilterChip>
           {CATEGORIES.map((cat) => (
@@ -94,17 +83,54 @@ export function LuzAmigaFindHelp() {
               active={filter === cat.id}
               color={cat.color}
               tint={cat.tint}
-              onClick={() => setFilter(cat.id)}
+              onClick={() => changeFilter(cat.id)}
             >
               {cat.label}
             </FilterChip>
           ))}
         </div>
 
+        <div className="mb-8 max-w-xl">
+          <label htmlFor="municipality-filter" className="sr-only">
+            Filtrar por municipio de Colombia
+          </label>
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8A7659]" aria-hidden="true" />
+            <input
+              id="municipality-filter"
+              list="colombia-municipalities"
+              value={municipality}
+              onChange={(event) => changeMunicipality(event.target.value)}
+              placeholder="Buscar municipio de Colombia"
+              className="h-11 w-full rounded-full border bg-white pl-11 pr-11 text-sm text-[#4A3B2A] outline-none transition focus:ring-2 focus:ring-[#4A7C59]"
+              style={{ borderColor: "#E4C79A" }}
+            />
+            <datalist id="colombia-municipalities">
+              {municipalities.map((name) => <option key={name} value={name} />)}
+            </datalist>
+            {municipality ? (
+              <button
+                type="button"
+                onClick={() => changeMunicipality("")}
+                className="absolute right-3 top-1/2 inline-flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full text-[#8A7659] hover:bg-[#F1E4CC]"
+                aria-label="Limpiar filtro de municipio"
+              >
+                <X className="h-4 w-4" aria-hidden="true" />
+              </button>
+            ) : null}
+          </div>
+          <p className="mt-2 text-xs text-[#8A7659]">
+            {municipalities.length > FALLBACK_MUNICIPALITIES.length
+              ? `${municipalities.length} municipios disponibles`
+              : "Cargando municipios de Colombia..."}
+          </p>
+        </div>
+
         {/* Grid */}
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {visible.map((listing) => {
-            const cat = CATEGORY_MAP[listing.category]
+            const category = listing.category ?? "events"
+            const cat = CATEGORY_MAP[category]
             const Icon = cat.icon
             return (
               <article
@@ -132,7 +158,7 @@ export function LuzAmigaFindHelp() {
                     {listing.title}
                   </h3>
                   <p className="text-sm font-medium" style={{ color: "#8A6D3B" }}>
-                    {listing.provider}
+                    {listing.author ?? "Comercio de la comunidad"}
                   </p>
                 </div>
 
@@ -140,14 +166,70 @@ export function LuzAmigaFindHelp() {
                   {listing.description}
                 </p>
 
+                <MiniLocationMap lat={listing.lat} lng={listing.lng} label={listing.title} />
+
                 <div className="mt-auto flex items-center gap-1.5 text-sm" style={{ color: "#8A7659" }}>
                   <MapPin className="h-4 w-4" aria-hidden="true" />
-                  {listing.location}
+                  {listing.address ?? listing.city ?? "Ubicación reconocida"}
                 </div>
+                {listing.contact ? (
+                  <div className="flex items-center gap-1.5 text-sm" style={{ color: "#8A7659" }}>
+                    <Phone className="h-4 w-4" aria-hidden="true" />
+                    <span>{listing.contact}</span>
+                  </div>
+                ) : null}
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                    `${listing.address ?? listing.city ?? ""} ${listing.lat},${listing.lng}`,
+                  )}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex w-fit items-center gap-1.5 text-sm font-semibold text-[#4A7C59] underline-offset-4 hover:underline"
+                >
+                  <Map className="h-4 w-4" aria-hidden="true" />
+                  Ver mapa
+                </a>
+                <a
+                  href={`https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${listing.lat},${listing.lng}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex w-fit items-center gap-1.5 text-sm font-semibold text-[#1769AA] underline-offset-4 hover:underline"
+                >
+                  <ExternalLink className="h-4 w-4" aria-hidden="true" />
+                  Ver Street View
+                </a>
               </article>
             )
           })}
         </div>
+
+        {pageCount > 1 ? (
+          <nav className="mt-8 flex items-center justify-center gap-4" aria-label="Paginación de comercios">
+            <button
+              type="button"
+              onClick={() => setPage((value) => Math.max(1, value - 1))}
+              disabled={currentPage === 1}
+              aria-label="Página anterior"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border transition-colors disabled:cursor-not-allowed disabled:opacity-40"
+              style={{ borderColor: "#E4C79A", color: "#4A7C59" }}
+            >
+              <ChevronLeft className="h-5 w-5" aria-hidden="true" />
+            </button>
+            <span className="text-sm font-medium" style={{ color: "#6B5B45" }} aria-live="polite">
+              Página {currentPage} de {pageCount}
+            </span>
+            <button
+              type="button"
+              onClick={() => setPage((value) => Math.min(pageCount, value + 1))}
+              disabled={currentPage === pageCount}
+              aria-label="Página siguiente"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border transition-colors disabled:cursor-not-allowed disabled:opacity-40"
+              style={{ borderColor: "#E4C79A", color: "#4A7C59" }}
+            >
+              <ChevronRight className="h-5 w-5" aria-hidden="true" />
+            </button>
+          </nav>
+        ) : null}
       </div>
     </section>
   )

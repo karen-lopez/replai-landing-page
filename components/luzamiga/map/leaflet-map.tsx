@@ -11,6 +11,7 @@ import { colorForItem, pinIcon, userLocationIcon } from "./marker-icons"
 interface LeafletMapProps {
   items: MapItem[]
   userPosition: { lat: number; lng: number } | null
+  mapCenter: { lat: number; lng: number } | null
   labelForItem: (item: MapItem) => string
   contactLabel: string
 }
@@ -33,7 +34,15 @@ function FlyToUser({ position }: { position: { lat: number; lng: number } | null
   return null
 }
 
-export default function LeafletMap({ items, userPosition, labelForItem, contactLabel }: LeafletMapProps) {
+function FlyToLocation({ position }: { position: { lat: number; lng: number } | null }) {
+  const map = useMap()
+  useEffect(() => {
+    if (position) map.flyTo([position.lat, position.lng], 12, { duration: 1.2 })
+  }, [position, map])
+  return null
+}
+
+export default function LeafletMap({ items, userPosition, mapCenter, labelForItem, contactLabel }: LeafletMapProps) {
   const markers = useMemo(
     () =>
       items.map((item) => (
@@ -46,6 +55,11 @@ export default function LeafletMap({ items, userPosition, labelForItem, contactL
                 {item.city ? ` · ${item.city}` : ""}
               </p>
               <p style={{ margin: "0 0 6px", fontSize: 12, color: "#374151", lineHeight: 1.4 }}>{item.description}</p>
+              {item.address ? (
+                <p style={{ margin: "0 0 8px", fontSize: 12, color: "#374151", lineHeight: 1.4 }}>
+                  <strong>Dirección:</strong> {item.address}
+                </p>
+              ) : null}
               {item.author ? (
                 <p style={{ margin: 0, fontSize: 12, color: "#111827" }}>
                   <strong>{item.author}</strong>
@@ -56,6 +70,24 @@ export default function LeafletMap({ items, userPosition, labelForItem, contactL
                   {contactLabel}: {item.contact}
                 </p>
               ) : null}
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 8 }}>
+                <a
+                  href={`https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${item.lat},${item.lng}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ color: "#1769AA", fontSize: 12, fontWeight: 700 }}
+                >
+                  Street View
+                </a>
+                <a
+                  href={`https://www.mapillary.com/app/?lat=${item.lat}&lng=${item.lng}&z=17`}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ color: "#1769AA", fontSize: 12, fontWeight: 700 }}
+                >
+                  Mapillary
+                </a>
+              </div>
             </div>
           </Popup>
         </Marker>
@@ -81,6 +113,7 @@ export default function LeafletMap({ items, userPosition, labelForItem, contactL
       {userPosition ? (
         <Marker position={[userPosition.lat, userPosition.lng]} icon={userLocationIcon()} />
       ) : null}
+      <FlyToLocation position={mapCenter} />
       <FlyToUser position={userPosition} />
     </MapContainer>
   )

@@ -1,4 +1,9 @@
-import { Calendar, Clock, MapPin } from "lucide-react"
+"use client"
+
+import { useState } from "react"
+import { Calendar, ChevronLeft, ChevronRight, Clock, MapPin } from "lucide-react"
+import type { MapItem } from "@/lib/luzamiga/types"
+import { useItems } from "./map/use-items"
 
 interface CommunityEvent {
   id: string
@@ -9,6 +14,20 @@ interface CommunityEvent {
   location: string
   description: string
 }
+
+function itemToEvent(item: MapItem): CommunityEvent {
+  return {
+    id: item.id,
+    title: item.title,
+    type: "Comunidad",
+    date: "Publicado recientemente",
+    time: "Disponible ahora",
+    location: item.address ?? item.city ?? "Ubicación reconocida",
+    description: item.description,
+  }
+}
+
+const EVENTS_PAGE_SIZE = 4
 
 // Sample events. Can later be replaced by community-posted data from a database.
 const EVENTS: CommunityEvent[] = [
@@ -55,6 +74,16 @@ const EVENTS: CommunityEvent[] = [
 ]
 
 export function LuzAmigaEvents() {
+  const [page, setPage] = useState(1)
+  const { items } = useItems()
+  const publishedEvents = items
+    .filter((item) => item.kind === "event" || (item.kind === "help" && item.category === "events"))
+    .map(itemToEvent)
+  const visibleEvents = [...publishedEvents, ...EVENTS]
+  const pageCount = Math.max(1, Math.ceil(visibleEvents.length / EVENTS_PAGE_SIZE))
+  const currentPage = Math.min(page, pageCount)
+  const paginatedEvents = visibleEvents.slice((currentPage - 1) * EVENTS_PAGE_SIZE, currentPage * EVENTS_PAGE_SIZE)
+
   return (
     <section id="eventos" className="py-16 md:py-24" style={{ backgroundColor: "#FFFFFF" }}>
       <div className="container mx-auto max-w-5xl px-4">
@@ -68,7 +97,7 @@ export function LuzAmigaEvents() {
         </div>
 
         <div className="grid gap-5 sm:grid-cols-2">
-          {EVENTS.map((event) => (
+          {paginatedEvents.map((event) => (
             <article
               key={event.id}
               className="flex flex-col gap-4 rounded-2xl border p-6"
@@ -106,6 +135,34 @@ export function LuzAmigaEvents() {
             </article>
           ))}
         </div>
+
+        {pageCount > 1 ? (
+          <nav className="mt-8 flex items-center justify-center gap-4" aria-label="Paginación de eventos">
+            <button
+              type="button"
+              onClick={() => setPage((value) => Math.max(1, value - 1))}
+              disabled={currentPage === 1}
+              aria-label="Página anterior de eventos"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border transition-colors disabled:cursor-not-allowed disabled:opacity-40"
+              style={{ borderColor: "#E4C79A", color: "#3F6BB0" }}
+            >
+              <ChevronLeft className="h-5 w-5" aria-hidden="true" />
+            </button>
+            <span className="text-sm font-medium" style={{ color: "#6B5B45" }} aria-live="polite">
+              Página {currentPage} de {pageCount}
+            </span>
+            <button
+              type="button"
+              onClick={() => setPage((value) => Math.min(pageCount, value + 1))}
+              disabled={currentPage === pageCount}
+              aria-label="Página siguiente de eventos"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border transition-colors disabled:cursor-not-allowed disabled:opacity-40"
+              style={{ borderColor: "#E4C79A", color: "#3F6BB0" }}
+            >
+              <ChevronRight className="h-5 w-5" aria-hidden="true" />
+            </button>
+          </nav>
+        ) : null}
       </div>
     </section>
   )

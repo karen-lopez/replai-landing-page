@@ -7,26 +7,43 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { CATEGORIES, type CategoryId } from "./categories"
-import { CheckCircle2, Loader2, UserPlus } from "lucide-react"
+import { CheckCircle2, Loader2, MapPin, UserPlus } from "lucide-react"
 import { useAuth } from "./auth/auth-provider"
 import { useT } from "./i18n/language-provider"
 import { enqueueItem } from "./offline/queue"
 
-// Centro aproximado de Colombia como respaldo si no hay geolocalización.
-const FALLBACK_COORDS = { lat: 4.6, lng: -74.08 }
+type BusinessLocation = { lat: number; lng: number; address: string; city: string }
 
 function getPosition(): Promise<{ lat: number; lng: number }> {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     if (!("geolocation" in navigator)) {
-      resolve(FALLBACK_COORDS)
+      reject(new Error("geolocation-unsupported"))
       return
     }
     navigator.geolocation.getCurrentPosition(
       (pos) => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
-      () => resolve(FALLBACK_COORDS),
-      { enableHighAccuracy: true, timeout: 8_000 },
+      () => reject(new Error("geolocation-denied")),
+      { enableHighAccuracy: true, timeout: 10_000, maximumAge: 30_000 },
     )
   })
+}
+
+async function reverseGeocode(coords: { lat: number; lng: number }): Promise<BusinessLocation> {
+  const params = new URLSearchParams({
+    format: "jsonv2",
+    lat: String(coords.lat),
+    lon: String(coords.lng),
+    "accept-language": "es",
+  })
+  const response = await fetch(`https://nominatim.openstreetmap.org/reverse?${params}`)
+  if (!response.ok) throw new Error("reverse-geocode-failed")
+  const data = await response.json()
+  const address = data.address ?? {}
+  return {
+    ...coords,
+    address: data.display_name ?? `${coords.lat.toFixed(5)}, ${coords.lng.toFixed(5)}`,
+    city: address.city ?? address.town ?? address.municipality ?? address.village ?? "",
+  }
 }
 
 export function LuzAmigaOfferHelp() {
@@ -37,11 +54,31 @@ export function LuzAmigaOfferHelp() {
   const [sending, setSending] = useState(false)
   const [queued, setQueued] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [locating, setLocating] = useState(false)
 
   const [name, setName] = useState("")
   const [location, setLocation] = useState("")
+  const [address, setAddress] = useState("")
+  const [businessPosition, setBusinessPosition] = useState<{ lat: number; lng: number } | null>(null)
   const [contact, setContact] = useState("")
   const [details, setDetails] = useState("")
+
+  async function locateBusiness() {
+    setLocating(true)
+    setError(null)
+    try {
+      const resolved = await reverseGeocode(await getPosition())
+      setBusinessPosition({ lat: resolved.lat, lng: resolved.lng })
+      setAddress(resolved.address)
+      if (resolved.city) setLocation(resolved.city)
+      return resolved
+    } catch {
+      setError("No pudimos reconocer tu ubicación. Activa el permiso de ubicación e inténtalo de nuevo.")
+      throw new Error("location-required")
+    } finally {
+      setLocating(false)
+    }
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -49,7 +86,15 @@ export function LuzAmigaOfferHelp() {
     setError(null)
     setQueued(false)
 
-    const coords = await getPosition()
+    let resolved: BusinessLocation
+    try {
+      resolved = businessPosition
+        ? { ...businessPosition, address, city: location.trim() }
+        : await locateBusiness()
+    } catch {
+      setSending(false)
+      return
+    }
     const payload = {
       kind: "help",
       category: selected,
@@ -57,9 +102,10 @@ export function LuzAmigaOfferHelp() {
       description: details.trim(),
       author: name.trim(),
       contact: contact.trim(),
-      city: location.trim(),
-      lat: coords.lat,
-      lng: coords.lng,
+      city: resolved.city || location.trim(),
+      address: resolved.address,
+      lat: resolved.lat,
+      lng: resolved.lng,
     }
 
     try {
@@ -182,6 +228,8 @@ export function LuzAmigaOfferHelp() {
                     setQueued(false)
                     setName("")
                     setLocation("")
+                    setAddress("")
+                    setBusinessPosition(null)
                     setContact("")
                     setDetails("")
                   }}
@@ -235,6 +283,33 @@ export function LuzAmigaOfferHelp() {
                       style={{ borderColor: "#EEE1C9" }}
                     />
                   </div>
+                </div>
+
+                <div className="grid gap-3 rounded-2xl border border-[#EAD9B8] bg-[#FFFDF8] p-4">
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                      <Label style={{ color: "#4A3B2A" }}>Ubicación exacta del negocio</Label>
+                      <p className="mt-1 text-sm text-[#8A7659]">
+                        Usaremos tu ubicación actual para colocar el comercio en el mapa.
+                      </p>
+                    </div>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={locateBusiness}
+                      disabled={locating}
+                      className="rounded-full border-[#D4B27A] text-[#8A6D3B]"
+                    >
+                      {locating ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <MapPin className="h-4 w-4" aria-hidden="true" />}
+                      {locating ? "Reconociendo..." : "Usar mi ubicación"}
+                    </Button>
+                  </div>
+                  {address ? (
+                    <p className="flex items-start gap-2 text-sm text-[#4A4030]" role="status">
+                      <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#2E9E5B]" aria-hidden="true" />
+                      <span><strong>Dirección reconocida:</strong> {address}</span>
+                    </p>
+                  ) : null}
                 </div>
 
                 <div className="grid gap-2">
