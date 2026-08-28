@@ -1,16 +1,31 @@
 "use client"
 
 import type React from "react"
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { CheckCircle2, FileCheck, Loader2, ShieldCheck, Upload } from "lucide-react"
+import { BadgeCheck, CheckCircle2, FileCheck, Loader2, ShieldCheck, Upload } from "lucide-react"
 import { useAuth } from "./auth/auth-provider"
 
 const ACCEPTED_TYPES = ["application/pdf", "image/jpeg", "image/png"]
 const MAX_FILE_BYTES = 5 * 1024 * 1024
+
+/**
+ * Sin backend real de validación todavía: esta espera y estos mensajes solo
+ * simulan que se está consultando el CCB, para que la verificación no se
+ * sienta instantánea. El día que haya validación real, esto se reemplaza por
+ * el resultado efectivo de esa consulta.
+ */
+const VERIFYING_DURATION_MS = 5000
+const VERIFYING_STEPS = [
+  "Validando el certificado…",
+  "Consultando la Cámara de Comercio…",
+  "Confirmando la titularidad del negocio…",
+]
+
+type Phase = "form" | "verifying" | "verified"
 
 interface BusinessVerificationDialogProps {
   open: boolean
@@ -26,14 +41,29 @@ export function BusinessVerificationDialog({ open, onOpenChange, onVerified }: B
   const [file, setFile] = useState<File | null>(null)
   const [sending, setSending] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [submitted, setSubmitted] = useState(false)
+  const [phase, setPhase] = useState<Phase>("form")
+  const [stepIndex, setStepIndex] = useState(0)
+  const timers = useRef<{ timeout?: ReturnType<typeof setTimeout>; interval?: ReturnType<typeof setInterval> }>({})
+
+  useEffect(() => {
+    if (phase !== "verifying") return
+    setStepIndex(0)
+    timers.current.interval = setInterval(() => {
+      setStepIndex((i) => Math.min(i + 1, VERIFYING_STEPS.length - 1))
+    }, VERIFYING_DURATION_MS / VERIFYING_STEPS.length)
+    timers.current.timeout = setTimeout(() => setPhase("verified"), VERIFYING_DURATION_MS)
+    return () => {
+      clearInterval(timers.current.interval)
+      clearTimeout(timers.current.timeout)
+    }
+  }, [phase])
 
   function resetForm() {
     setBusinessName("")
     setCcbNumber("")
     setFile(null)
     setError(null)
-    setSubmitted(false)
+    setPhase("form")
   }
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -78,7 +108,7 @@ export function BusinessVerificationDialog({ open, onOpenChange, onVerified }: B
         return
       }
       updateUser(data.user)
-      setSubmitted(true)
+      setPhase("verifying")
     } catch {
       setError("No pudimos enviar el certificado. Revisa tu conexión e inténtalo de nuevo.")
     } finally {
@@ -106,7 +136,7 @@ export function BusinessVerificationDialog({ open, onOpenChange, onVerified }: B
           </DialogDescription>
         </DialogHeader>
 
-        {submitted ? (
+        {phase === "verified" ? (
           <div className="flex flex-col items-center gap-4 py-8 text-center">
             <CheckCircle2 className="h-12 w-12" style={{ color: "#D97706" }} aria-hidden="true" />
             <h3 className="text-xl font-semibold" style={{ color: "#3D3020" }}>
@@ -127,6 +157,22 @@ export function BusinessVerificationDialog({ open, onOpenChange, onVerified }: B
             >
               Continuar a publicar
             </Button>
+          </div>
+        ) : phase === "verifying" ? (
+          <div className="flex flex-col items-center gap-4 py-10 text-center">
+            <span
+              className="flex h-14 w-14 items-center justify-center rounded-full"
+              style={{ backgroundColor: "#FBEBD1" }}
+            >
+              <BadgeCheck className="h-7 w-7 animate-pulse" style={{ color: "#C77F16" }} aria-hidden="true" />
+            </span>
+            <h3 className="text-xl font-semibold" style={{ color: "#3D3020" }}>
+              Verificando tu comercio…
+            </h3>
+            <p className="flex items-center gap-2 text-sm" style={{ color: "#6B5B45" }} role="status" aria-live="polite">
+              <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+              {VERIFYING_STEPS[stepIndex]}
+            </p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="grid gap-5">
