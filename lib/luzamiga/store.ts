@@ -1,4 +1,5 @@
 import type { MapItem } from "./types"
+import earthquakeData from "@/data/terremoto-17-agosto-2023.json"
 
 /**
  * Store en memoria (singleton por proceso). No apto para producción:
@@ -15,6 +16,7 @@ const g = globalThis as unknown as { __luzAmigaStore?: LuzAmigaStore }
 function seed(): MapItem[] {
   const now = Date.now()
   const at = (minsAgo: number) => new Date(now - minsAgo * 60_000).toISOString()
+  const reportTypes = ["landslideRisk", "blockedRoad", "safeZone"] as const
 
   return [
     // ---- Reactivando el comercio (help) ----
@@ -147,43 +149,19 @@ function seed(): MapItem[] {
       status: "active",
     },
 
-    // ---- Reportes ciudadanos (userReport) ----
-    {
-      id: "report-1",
-      kind: "userReport",
-      reportType: "safeZone",
-      title: "Zona segura: coliseo municipal",
-      description: "Espacio amplio y estable habilitado como punto de encuentro seguro.",
-      city: "Pereira",
-      lat: 4.8156,
-      lng: -75.6944,
-      createdAt: at(45),
-      status: "active",
-    },
-    {
-      id: "report-2",
-      kind: "userReport",
-      reportType: "blockedRoad",
-      title: "Vía bloqueada por escombros",
-      description: "Paso cerrado por caída de material. Buscar ruta alterna.",
-      city: "Manizales",
-      lat: 5.055,
-      lng: -75.52,
-      createdAt: at(30),
-      status: "active",
-    },
-    {
-      id: "report-3",
-      kind: "userReport",
-      reportType: "landslideRisk",
-      title: "Riesgo de derrumbe en ladera",
-      description: "Grietas visibles en el terreno. Evitar la zona y reportar a autoridades.",
-      city: "Medellín",
-      lat: 6.2518,
-      lng: -75.5636,
-      createdAt: at(15),
-      status: "active",
-    },
+    // ---- Reportes ciudadanos basados en el dataset historico de demo ----
+    ...earthquakeData.affectedCities.map((city, index) => ({
+      id: `report-earthquake-${index + 1}`,
+      kind: "userReport" as const,
+      reportType: reportTypes[index % reportTypes.length],
+      title: `Afectacion reportada en ${city.municipality}`,
+      description: `${city.reportedEffects.join(", ")}. Datos de demostracion basados en reportes del sismo del 17 de agosto de 2023.`,
+      city: city.municipality,
+      lat: city.latitude,
+      lng: city.longitude,
+      createdAt: at(15 + index * 12),
+      status: "active" as const,
+    })),
   ]
 }
 
