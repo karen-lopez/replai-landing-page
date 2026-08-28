@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Calendar, CalendarHeart, Map, MapPin, Sparkles, UserPlus } from "lucide-react"
+import { Calendar, CalendarHeart, Instagram, Map, MapPin, Sparkles, UserPlus } from "lucide-react"
 import { useItems } from "./map/use-items"
 import { useAuth } from "./auth/auth-provider"
 import { PublishEventDialog } from "./publish-event-dialog"
@@ -115,6 +115,19 @@ export function LuzAmigaEvents() {
                       {event.address ?? event.city ?? "Ubicación reconocida"}
                     </div>
                   </div>
+
+                  {event.instagram ? (
+                    <a
+                      href={`https://www.instagram.com/${event.instagram}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex w-fit items-center gap-1.5 text-sm font-medium hover:underline"
+                      style={{ color: "#C1367B" }}
+                    >
+                      <Instagram className="h-4 w-4" aria-hidden="true" />
+                      <span>@{event.instagram}</span>
+                    </a>
+                  ) : null}
 
                   <button
                     type="button"

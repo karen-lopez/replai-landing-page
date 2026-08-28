@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
-import { CheckCircle2, Loader2, MapPin, Search } from "lucide-react"
+import { CheckCircle2, Instagram, Loader2, MapPin, Search } from "lucide-react"
 import { useT } from "./i18n/language-provider"
 import { enqueueItem } from "./offline/queue"
 
@@ -95,6 +95,7 @@ export function PublishEventDialog({ open, onOpenChange }: PublishEventDialogPro
   const [title, setTitle] = useState("")
   const [organizer, setOrganizer] = useState("")
   const [when, setWhen] = useState("")
+  const [instagram, setInstagram] = useState("")
   const [address, setAddress] = useState("")
   const [eventPosition, setEventPosition] = useState<{ lat: number; lng: number } | null>(null)
   const [city, setCity] = useState("")
@@ -111,6 +112,7 @@ export function PublishEventDialog({ open, onOpenChange }: PublishEventDialogPro
     setTitle("")
     setOrganizer("")
     setWhen("")
+    setInstagram("")
     setAddress("")
     setEventPosition(null)
     setCity("")
@@ -182,6 +184,7 @@ export function PublishEventDialog({ open, onOpenChange }: PublishEventDialogPro
       description: details.trim(),
       author: organizer.trim(),
       contact: when.trim(),
+      instagram: instagram.trim(),
       city: resolved.city || city.trim(),
       address: resolved.address,
       lat: resolved.lat,
@@ -293,6 +296,26 @@ export function PublishEventDialog({ open, onOpenChange }: PublishEventDialogPro
                   onChange={(e) => setWhen(e.target.value)}
                   placeholder="Ej. Sábado 6 de septiembre, 10:00 a. m."
                   className="rounded-xl"
+                  style={{ borderColor: "#EEE1C9" }}
+                />
+              </div>
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="event-instagram" style={{ color: "#4A3B2A" }}>
+                Instagram{" "}
+                <span className="font-normal" style={{ color: "#8A7659" }}>
+                  (opcional)
+                </span>
+              </Label>
+              <div className="relative">
+                <Instagram className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8A7659]" aria-hidden="true" />
+                <Input
+                  id="event-instagram"
+                  value={instagram}
+                  onChange={(e) => setInstagram(e.target.value)}
+                  placeholder="tuevento"
+                  className="rounded-xl pl-9"
                   style={{ borderColor: "#EEE1C9" }}
                 />
               </div>

@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { CATEGORIES, type CategoryId } from "./categories"
-import { CheckCircle2, Loader2, MapPin, Phone, Search, ShieldCheck } from "lucide-react"
+import { CheckCircle2, Instagram, Loader2, MapPin, Phone, Search, ShieldCheck } from "lucide-react"
 import { useT } from "./i18n/language-provider"
 import { enqueueItem } from "./offline/queue"
 
@@ -141,6 +141,7 @@ export function PublishListingDialog({ open, onOpenChange }: PublishListingDialo
   const [address, setAddress] = useState("")
   const [businessPosition, setBusinessPosition] = useState<{ lat: number; lng: number } | null>(null)
   const [contact, setContact] = useState("")
+  const [instagram, setInstagram] = useState("")
   const [details, setDetails] = useState("")
 
   const [searchQuery, setSearchQuery] = useState("")
@@ -163,6 +164,7 @@ export function PublishListingDialog({ open, onOpenChange }: PublishListingDialo
     setAddress("")
     setBusinessPosition(null)
     setContact("")
+    setInstagram("")
     setDetails("")
     setError(null)
     setSearchQuery("")
@@ -262,6 +264,7 @@ export function PublishListingDialog({ open, onOpenChange }: PublishListingDialo
       description: details.trim(),
       author: name.trim(),
       contact: contact.trim(),
+      instagram: instagram.trim(),
       city: resolved.city || location.trim(),
       address: resolved.address,
       lat: resolved.lat,
@@ -404,6 +407,26 @@ export function PublishListingDialog({ open, onOpenChange }: PublishListingDialo
                   onChange={(e) => setContact(e.target.value)}
                   placeholder="WhatsApp, teléfono o correo"
                   className="rounded-xl"
+                  style={{ borderColor: "#EEE1C9" }}
+                />
+              </div>
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="offer-instagram" style={{ color: "#4A3B2A" }}>
+                Instagram{" "}
+                <span className="font-normal" style={{ color: "#8A7659" }}>
+                  (opcional)
+                </span>
+              </Label>
+              <div className="relative">
+                <Instagram className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8A7659]" aria-hidden="true" />
+                <Input
+                  id="offer-instagram"
+                  value={instagram}
+                  onChange={(e) => setInstagram(e.target.value)}
+                  placeholder="tunegocio"
+                  className="rounded-xl pl-9"
                   style={{ borderColor: "#EEE1C9" }}
                 />
               </div>

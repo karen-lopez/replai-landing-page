@@ -3,12 +3,13 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { CATEGORIES, CATEGORY_MAP, type CategoryId } from "./categories"
-import { ChevronLeft, ChevronRight, Map, MapPin, Phone, Store, UserPlus } from "lucide-react"
+import { ChevronLeft, ChevronRight, Instagram, Map, MapPin, Phone, Store, UserPlus } from "lucide-react"
 import { useItems } from "./map/use-items"
 import { useAuth } from "./auth/auth-provider"
 import { useT } from "./i18n/language-provider"
 import { MunicipalityAutocomplete } from "./municipality-autocomplete"
 import { PublishListingDialog } from "./publish-listing-dialog"
+import { BusinessVerificationDialog } from "./business-verification-dialog"
 import { SCOPED_MUNICIPALITIES } from "@/lib/luzamiga/municipalities"
 
 const PAGE_SIZE = 3
@@ -21,6 +22,7 @@ export function LuzAmigaCommerce() {
   const [municipality, setMunicipality] = useState("")
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [publishOpen, setPublishOpen] = useState(false)
+  const [verifyOpen, setVerifyOpen] = useState(false)
   const { items } = useItems()
 
   const listings = items.filter((item) => item.kind === "help" || item.kind === "event")
@@ -47,6 +49,10 @@ export function LuzAmigaCommerce() {
   function handlePublishClick() {
     if (!user) {
       openRegister()
+      return
+    }
+    if (!user.businessVerified) {
+      setVerifyOpen(true)
       return
     }
     setPublishOpen(true)
@@ -77,7 +83,11 @@ export function LuzAmigaCommerce() {
               {user ? <Store className="h-5 w-5" aria-hidden="true" /> : <UserPlus className="h-5 w-5" aria-hidden="true" />}
             </span>
             <div className="max-w-xs text-sm leading-relaxed" style={{ color: "#6B5B45" }}>
-              {user ? "¿Tienes un negocio? Comparte tu reapertura, evento o promoción." : t("offer.needAccountBody")}
+              {user
+                ? user.businessVerified
+                  ? "¿Tienes un negocio? Comparte tu reapertura, evento o promoción."
+                  : "¿Tienes un negocio? Verifica tu comercio con el CCB para poder publicar."
+                : t("offer.needAccountBody")}
             </div>
             <Button
               type="button"
@@ -85,7 +95,7 @@ export function LuzAmigaCommerce() {
               className="w-full shrink-0 rounded-full px-6 text-sm font-semibold text-white sm:w-auto"
               style={{ backgroundColor: "#C77F16" }}
             >
-              {user ? "Publicar mi negocio" : t("offer.registerCta")}
+              {user ? (user.businessVerified ? "Publicar mi negocio" : "Verificar mi comercio") : t("offer.registerCta")}
             </Button>
           </div>
         </div>
@@ -175,6 +185,18 @@ export function LuzAmigaCommerce() {
                     <span>{listing.contact}</span>
                   </div>
                 ) : null}
+                {listing.instagram ? (
+                  <a
+                    href={`https://www.instagram.com/${listing.instagram}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex w-fit items-center gap-1.5 text-sm font-medium hover:underline"
+                    style={{ color: "#C1367B" }}
+                  >
+                    <Instagram className="h-4 w-4" aria-hidden="true" />
+                    <span>@{listing.instagram}</span>
+                  </a>
+                ) : null}
 
                 <button
                   type="button"
@@ -231,6 +253,11 @@ export function LuzAmigaCommerce() {
         ) : null}
       </div>
 
+      <BusinessVerificationDialog
+        open={verifyOpen}
+        onOpenChange={setVerifyOpen}
+        onVerified={() => setPublishOpen(true)}
+      />
       <PublishListingDialog open={publishOpen} onOpenChange={setPublishOpen} />
     </section>
   )

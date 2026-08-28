@@ -18,6 +18,8 @@ export interface MapItem {
   author?: string
   /** Contacto (whatsapp, teléfono, correo) opcional */
   contact?: string
+  /** Usuario de Instagram opcional, sin @ ni URL (p. ej. "panaderialaespiga") */
+  instagram?: string
   /** Ciudad o municipio */
   city?: string
   /** Dirección reconocida a partir de las coordenadas del negocio */
