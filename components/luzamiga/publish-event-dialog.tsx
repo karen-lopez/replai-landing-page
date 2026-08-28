@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
-import { CheckCircle2, Loader2, MapPin, Search } from "lucide-react"
+import { CheckCircle2, Instagram, Loader2, MapPin, Search } from "lucide-react"
 import { useT } from "./i18n/language-provider"
 import { enqueueItem } from "./offline/queue"
 
@@ -82,9 +82,11 @@ async function searchPlaces(query: string): Promise<PlaceSearchResult[]> {
 interface PublishEventDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
+  /** Se dispara justo después de publicar con éxito (no en modo offline). */
+  onPublished?: () => void
 }
 
-export function PublishEventDialog({ open, onOpenChange }: PublishEventDialogProps) {
+export function PublishEventDialog({ open, onOpenChange, onPublished }: PublishEventDialogProps) {
   const { t } = useT()
   const [submitted, setSubmitted] = useState(false)
   const [sending, setSending] = useState(false)
@@ -95,6 +97,7 @@ export function PublishEventDialog({ open, onOpenChange }: PublishEventDialogPro
   const [title, setTitle] = useState("")
   const [organizer, setOrganizer] = useState("")
   const [when, setWhen] = useState("")
+  const [instagram, setInstagram] = useState("")
   const [address, setAddress] = useState("")
   const [eventPosition, setEventPosition] = useState<{ lat: number; lng: number } | null>(null)
   const [city, setCity] = useState("")
@@ -111,6 +114,7 @@ export function PublishEventDialog({ open, onOpenChange }: PublishEventDialogPro
     setTitle("")
     setOrganizer("")
     setWhen("")
+    setInstagram("")
     setAddress("")
     setEventPosition(null)
     setCity("")
@@ -182,32 +186,40 @@ export function PublishEventDialog({ open, onOpenChange }: PublishEventDialogPro
       description: details.trim(),
       author: organizer.trim(),
       contact: when.trim(),
+      instagram: instagram.trim(),
       city: resolved.city || city.trim(),
       address: resolved.address,
       lat: resolved.lat,
       lng: resolved.lng,
     }
 
+    let res: Response
     try {
-      const res = await fetch("/api/luzamiga/items", {
+      res = await fetch("/api/luzamiga/items", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       })
-      if (res.status === 401) {
-        setError(t("offer.needAccountBody"))
-        setSending(false)
-        return
-      }
-      if (!res.ok) throw new Error("bad response")
-      setSubmitted(true)
     } catch {
+      // Sin conexión de verdad (el fetch ni se completó): encolar para
+      // sincronizar al reconectar.
       await enqueueItem(payload)
       setQueued(true)
       setSubmitted(true)
-    } finally {
       setSending(false)
+      return
     }
+
+    if (res.status === 401) {
+      setError(t("offer.needAccountBody"))
+    } else if (!res.ok) {
+      const data = await res.json().catch(() => null)
+      setError(data?.error ?? "No pudimos publicar tu evento. Inténtalo de nuevo.")
+    } else {
+      setSubmitted(true)
+      onPublished?.()
+    }
+    setSending(false)
   }
 
   return (
@@ -293,6 +305,26 @@ export function PublishEventDialog({ open, onOpenChange }: PublishEventDialogPro
                   onChange={(e) => setWhen(e.target.value)}
                   placeholder="Ej. Sábado 6 de septiembre, 10:00 a. m."
                   className="rounded-xl"
+                  style={{ borderColor: "#EEE1C9" }}
+                />
+              </div>
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="event-instagram" style={{ color: "#4A3B2A" }}>
+                Instagram{" "}
+                <span className="font-normal" style={{ color: "#8A7659" }}>
+                  (opcional)
+                </span>
+              </Label>
+              <div className="relative">
+                <Instagram className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8A7659]" aria-hidden="true" />
+                <Input
+                  id="event-instagram"
+                  value={instagram}
+                  onChange={(e) => setInstagram(e.target.value)}
+                  placeholder="tuevento"
+                  className="rounded-xl pl-9"
                   style={{ borderColor: "#EEE1C9" }}
                 />
               </div>

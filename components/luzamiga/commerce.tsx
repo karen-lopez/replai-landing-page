@@ -3,68 +3,58 @@
 import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { CATEGORIES, CATEGORY_MAP, type CategoryId } from "./categories"
-import { ChevronLeft, ChevronRight, Map, MapPin, Phone, Store, UserPlus } from "lucide-react"
+import { ChevronLeft, ChevronRight, Instagram, Map, MapPin, Phone, Store, UserPlus } from "lucide-react"
 import { useItems } from "./map/use-items"
 import { useAuth } from "./auth/auth-provider"
 import { useT } from "./i18n/language-provider"
-import { MunicipalityAutocomplete } from "./municipality-autocomplete"
+import { useCityFilter } from "./city-filter-provider"
 import { PublishListingDialog } from "./publish-listing-dialog"
+import { BusinessVerificationDialog } from "./business-verification-dialog"
 
 const PAGE_SIZE = 3
-const MUNICIPALITIES_URL = "https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json"
-const FALLBACK_MUNICIPALITIES = ["Bogotá", "Manizales", "Medellín", "Pereira", "Cali", "Armenia"]
+
+function normalize(value: string) {
+  return value.toLocaleLowerCase("es").normalize("NFD").replace(/[̀-ͯ]/g, "")
+}
 
 export function LuzAmigaCommerce() {
   const { user, openRegister } = useAuth()
   const { t } = useT()
+  const { city } = useCityFilter()
   const [filter, setFilter] = useState<CategoryId | "all">("all")
   const [page, setPage] = useState(1)
-  const [municipality, setMunicipality] = useState("")
-  const [municipalities, setMunicipalities] = useState(FALLBACK_MUNICIPALITIES)
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [publishOpen, setPublishOpen] = useState(false)
-  const { items } = useItems()
-
-  useEffect(() => {
-    let active = true
-    fetch(MUNICIPALITIES_URL)
-      .then((response) => (response.ok ? response.json() : Promise.reject(new Error("catalog-failed"))))
-      .then((departments: Array<{ ciudades?: string[] }>) => {
-        const names = [...new Set(departments.flatMap((department) => department.ciudades ?? []))].sort((a, b) =>
-          a.localeCompare(b, "es"),
-        )
-        if (active && names.length) setMunicipalities(names)
-      })
-      .catch(() => {})
-    return () => {
-      active = false
-    }
-  }, [])
+  const [verifyOpen, setVerifyOpen] = useState(false)
+  const { items, refresh } = useItems()
 
   const listings = items.filter((item) => item.kind === "help" || item.kind === "event")
-  const normalizedMunicipality = municipality.trim().toLocaleLowerCase("es").normalize("NFD").replace(/[̀-ͯ]/g, "")
+  const normalizedCity = city ? normalize(city) : ""
   const filtered = listings.filter((item) => {
     const matchesCategory = filter === "all" || item.category === filter
-    const searchableLocation = `${item.city ?? ""} ${item.address ?? ""}`.toLocaleLowerCase("es").normalize("NFD").replace(/[̀-ͯ]/g, "")
-    return matchesCategory && (!normalizedMunicipality || searchableLocation.includes(normalizedMunicipality))
+    const searchableLocation = normalize(`${item.city ?? ""} ${item.address ?? ""}`)
+    return matchesCategory && (!normalizedCity || searchableLocation.includes(normalizedCity))
   })
   const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
   const currentPage = Math.min(page, pageCount)
   const visible = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
+
+  useEffect(() => {
+    setPage(1)
+  }, [city])
 
   function changeFilter(nextFilter: CategoryId | "all") {
     setFilter(nextFilter)
     setPage(1)
   }
 
-  function changeMunicipality(value: string) {
-    setMunicipality(value)
-    setPage(1)
-  }
-
   function handlePublishClick() {
     if (!user) {
       openRegister()
+      return
+    }
+    if (!user.businessVerified) {
+      setVerifyOpen(true)
       return
     }
     setPublishOpen(true)
@@ -80,7 +70,7 @@ export function LuzAmigaCommerce() {
             </h2>
             <p className="mt-3 text-lg leading-relaxed" style={{ color: "#6B5B45" }}>
               Descubre los negocios de la comunidad que se están reactivando: reaperturas, eventos y promociones.
-              Filtra por etiqueta o municipio para encontrarlos.
+              Filtra por etiqueta, o elige tu ciudad arriba.
             </p>
           </div>
 
@@ -95,7 +85,11 @@ export function LuzAmigaCommerce() {
               {user ? <Store className="h-5 w-5" aria-hidden="true" /> : <UserPlus className="h-5 w-5" aria-hidden="true" />}
             </span>
             <div className="max-w-xs text-sm leading-relaxed" style={{ color: "#6B5B45" }}>
-              {user ? "¿Tienes un negocio? Comparte tu reapertura, evento o promoción." : t("offer.needAccountBody")}
+              {user
+                ? user.businessVerified
+                  ? "¿Tienes un negocio? Comparte tu reapertura, evento o promoción."
+                  : "¿Tienes un negocio? Verifica tu comercio con el CCB para poder publicar."
+                : t("offer.needAccountBody")}
             </div>
             <Button
               type="button"
@@ -103,7 +97,7 @@ export function LuzAmigaCommerce() {
               className="w-full shrink-0 rounded-full px-6 text-sm font-semibold text-white sm:w-auto"
               style={{ backgroundColor: "#C77F16" }}
             >
-              {user ? "Publicar mi negocio" : t("offer.registerCta")}
+              {user ? (user.businessVerified ? "Publicar mi negocio" : "Verificar mi comercio") : t("offer.registerCta")}
             </Button>
           </div>
         </div>
@@ -126,25 +120,17 @@ export function LuzAmigaCommerce() {
           ))}
         </div>
 
-        <div className="mb-8 max-w-xl">
-          <label htmlFor="municipality-filter" className="mb-2 block text-sm font-semibold" style={{ color: "#3A2E1A" }}>
-            Filtrar por municipio de Colombia
-          </label>
-          <MunicipalityAutocomplete
-            id="municipality-filter"
-            value={municipality}
-            onChange={changeMunicipality}
-            municipalities={municipalities}
-            placeholder="Buscar municipio de Colombia"
-          />
-          <p className="mt-2 text-xs text-[#8A7659]">
-            {municipalities.length > FALLBACK_MUNICIPALITIES.length
-              ? `${municipalities.length} municipios disponibles`
-              : "Cargando municipios de Colombia..."}
-          </p>
-        </div>
-
         {/* Grid */}
+        {filtered.length === 0 ? (
+          <div
+            className="rounded-2xl border border-dashed p-8 text-center"
+            style={{ borderColor: "#E4C79A", backgroundColor: "#FFFDF8" }}
+          >
+            <p style={{ color: "#6B5B45" }}>
+              {city ? `Todavía no hay comercios publicados en ${city}.` : "Todavía no hay comercios publicados."}
+            </p>
+          </div>
+        ) : (
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {visible.map((listing) => {
             const category = listing.category ?? "events"
@@ -195,6 +181,18 @@ export function LuzAmigaCommerce() {
                     <span>{listing.contact}</span>
                   </div>
                 ) : null}
+                {listing.instagram ? (
+                  <a
+                    href={`https://www.instagram.com/${listing.instagram}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex w-fit items-center gap-1.5 text-sm font-medium hover:underline"
+                    style={{ color: "#C1367B" }}
+                  >
+                    <Instagram className="h-4 w-4" aria-hidden="true" />
+                    <span>@{listing.instagram}</span>
+                  </a>
+                ) : null}
 
                 <button
                   type="button"
@@ -221,6 +219,7 @@ export function LuzAmigaCommerce() {
             )
           })}
         </div>
+        )}
 
         {pageCount > 1 ? (
           <nav className="mt-8 flex items-center justify-center gap-4" aria-label="Paginación de comercios">
@@ -251,7 +250,12 @@ export function LuzAmigaCommerce() {
         ) : null}
       </div>
 
-      <PublishListingDialog open={publishOpen} onOpenChange={setPublishOpen} />
+      <BusinessVerificationDialog
+        open={verifyOpen}
+        onOpenChange={setVerifyOpen}
+        onVerified={() => setPublishOpen(true)}
+      />
+      <PublishListingDialog open={publishOpen} onOpenChange={setPublishOpen} onPublished={refresh} />
     </section>
   )
 }

@@ -1,12 +1,13 @@
 "use client"
 
 import dynamic from "next/dynamic"
-import { useEffect, useMemo, useState } from "react"
+import { useMemo, useState } from "react"
 import { AlertTriangle, BarChart3, Building2, Loader2, MapPin, Radio, WifiOff } from "lucide-react"
 import { useItems } from "./use-items"
 import { colorForItem } from "./marker-icons"
 import { CATEGORIES } from "../categories"
 import { REPORT_COLORS, REPORT_TYPES, type MapItem } from "@/lib/luzamiga/types"
+import { SCOPED_MUNICIPALITIES } from "@/lib/luzamiga/municipalities"
 import { useT } from "../i18n/language-provider"
 import { useAuth } from "../auth/auth-provider"
 import { MunicipalityAutocomplete } from "../municipality-autocomplete"
@@ -20,11 +21,20 @@ const LeafletMap = dynamic(() => import("./leaflet-map"), {
   ),
 })
 
-const MUNICIPALITIES_URL = "https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json"
-const FALLBACK_MUNICIPALITIES = ["Bogotá", "Manizales", "Medellín", "Pereira", "Cali", "Armenia"]
+/** Radio (km) alrededor del centro de la localidad buscada para considerar
+ * que un ítem del mapa pertenece a ella. Los reportes ciudadanos solo tienen
+ * lat/lng (sin dirección de texto), así que comparar por distancia es lo
+ * único que funciona para todos los tipos de ítem. */
+const LOCALITY_RADIUS_KM = 15
 
-function normalize(value: string) {
-  return value.toLocaleLowerCase("es").normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+function haversineKm(a: { lat: number; lng: number }, b: { lat: number; lng: number }) {
+  const R = 6371
+  const dLat = ((b.lat - a.lat) * Math.PI) / 180
+  const dLng = ((b.lng - a.lng) * Math.PI) / 180
+  const lat1 = (a.lat * Math.PI) / 180
+  const lat2 = (b.lat * Math.PI) / 180
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) ** 2
+  return 2 * R * Math.asin(Math.sqrt(h))
 }
 
 export function NationalMap() {
@@ -36,22 +46,9 @@ export function NationalMap() {
   const [geoError, setGeoError] = useState<string | null>(null)
   const [municipality, setMunicipality] = useState("")
   const [activeMunicipality, setActiveMunicipality] = useState("")
-  const [municipalities, setMunicipalities] = useState(FALLBACK_MUNICIPALITIES)
   const [localityPosition, setLocalityPosition] = useState<{ lat: number; lng: number } | null>(null)
   const [analyzing, setAnalyzing] = useState(false)
   const [analysisError, setAnalysisError] = useState<string | null>(null)
-
-  useEffect(() => {
-    let active = true
-    fetch(MUNICIPALITIES_URL)
-      .then((response) => (response.ok ? response.json() : Promise.reject(new Error("catalog-failed"))))
-      .then((departments: Array<{ ciudades?: string[] }>) => {
-        const names = [...new Set(departments.flatMap((department) => department.ciudades ?? []))].sort((a, b) => a.localeCompare(b, "es"))
-        if (active && names.length) setMunicipalities(names)
-      })
-      .catch(() => {})
-    return () => { active = false }
-  }, [])
 
   const labelForItem = useMemo(
     () => (item: MapItem) => {
@@ -86,7 +83,7 @@ export function NationalMap() {
   async function analyzeLocality() {
     const selected = municipality.trim()
     if (!selected) {
-      setAnalysisError("Escribe o selecciona un municipio para analizarlo.")
+      setAnalysisError("Escribe o selecciona un municipio para buscarlo.")
       return
     }
     setAnalyzing(true)
@@ -123,9 +120,10 @@ export function NationalMap() {
     }
   }
 
-  const mapItems = activeMunicipality
-    ? items.filter((item) => normalize(`${item.city ?? ""} ${item.address ?? ""}`).includes(normalize(activeMunicipality)))
-    : items
+  const mapItems =
+    activeMunicipality && localityPosition
+      ? items.filter((item) => haversineKm({ lat: item.lat, lng: item.lng }, localityPosition) <= LOCALITY_RADIUS_KM)
+      : items
   const localityReports = mapItems.filter((item) => item.kind === "userReport")
   const localityBusinesses = mapItems.filter((item) => item.kind === "help")
   const localityEvents = mapItems.filter((item) => item.kind === "event" || item.category === "events")
@@ -199,13 +197,13 @@ export function NationalMap() {
           <div className="flex flex-col gap-3 md:flex-row md:items-end">
             <div className="min-w-0 flex-1">
               <label htmlFor="locality-analysis" className="mb-2 block text-sm font-semibold text-[#3A2E1A]">
-                Analizar por localidad
+                Buscar por localidad
               </label>
               <MunicipalityAutocomplete
                 id="locality-analysis"
                 value={municipality}
                 onChange={updateMunicipality}
-                municipalities={municipalities}
+                municipalities={SCOPED_MUNICIPALITIES}
                 placeholder="Busca un municipio de Colombia"
                 onEnter={analyzeLocality}
               />
@@ -217,7 +215,7 @@ export function NationalMap() {
               className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-[#2E7D61] px-5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#24664F] disabled:opacity-60"
             >
               {analyzing ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <BarChart3 className="h-4 w-4" aria-hidden="true" />}
-              {analyzing ? "Analizando..." : "Analizar localidad"}
+              {analyzing ? "Buscando..." : "Buscar localidad"}
             </button>
           </div>
           {analysisError ? <p className="mt-3 rounded-lg bg-[#FCE4E4] px-3 py-2 text-sm text-[#B4231F]" role="alert">{analysisError}</p> : null}

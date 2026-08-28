@@ -14,6 +14,17 @@ const HELP_CATEGORIES: HelpCategory[] = ["reopening", "events", "promotions"]
 const MAX_TITLE = 120
 const MAX_DESC = 600
 
+/** Acepta "@usuario", una URL de instagram.com o el usuario a secas, y
+ * siempre devuelve solo el usuario (sin @ ni URL). */
+function normalizeInstagram(raw: unknown): string | undefined {
+  if (typeof raw !== "string") return undefined
+  const trimmed = raw.trim()
+  if (!trimmed) return undefined
+  const withoutUrl = trimmed.replace(/^https?:\/\/(www\.)?instagram\.com\//i, "")
+  const handle = withoutUrl.replace(/^@/, "").split(/[/?#]/)[0].trim()
+  return handle ? handle.slice(0, 60) : undefined
+}
+
 export async function GET(req: NextRequest) {
   const kind = req.nextUrl.searchParams.get("kind") ?? undefined
   const { items, serverTime } = getItems(kind)
@@ -40,6 +51,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       { error: "Necesitas iniciar sesión para publicar." },
       { status: 401 },
+    )
+  }
+
+  // Publicar un comercio exige haber verificado el CCB una única vez.
+  if (kind === "help" && !user?.businessVerified) {
+    return NextResponse.json(
+      { error: "Verifica tu comercio con el certificado de Cámara de Comercio antes de publicar." },
+      { status: 403 },
     )
   }
 
@@ -87,6 +106,7 @@ export async function POST(req: NextRequest) {
     description,
     author: body.author ? String(body.author).slice(0, 120) : user?.name,
     contact: body.contact ? String(body.contact).slice(0, 160) : undefined,
+    instagram: normalizeInstagram(body.instagram),
     city: body.city ? String(body.city).slice(0, 80) : user?.city,
     address: body.address ? String(body.address).slice(0, 240) : undefined,
     lat,

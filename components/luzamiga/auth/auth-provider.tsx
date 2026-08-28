@@ -8,6 +8,8 @@ export interface AuthUser {
   name: string
   city: string
   phone: string
+  /** Requisito único para poder publicar comercios: verificación con CCB. */
+  businessVerified: boolean
 }
 
 type DialogView = "login" | "register" | null
@@ -24,6 +26,8 @@ interface AuthContextValue {
     password: string
   }) => Promise<{ ok: boolean; error?: string }>
   logout: () => Promise<void>
+  /** Actualiza el usuario en memoria (p. ej. tras verificar el comercio). */
+  updateUser: (user: AuthUser) => void
   dialog: DialogView
   loginReason: string | null
   openLogin: (reason?: string) => void
@@ -97,6 +101,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       login,
       register,
       logout,
+      updateUser: setUser,
       dialog,
       loginReason,
       openLogin: (reason) => {

@@ -54,27 +54,35 @@ export function UserReport() {
           lng,
         }
         setStatus({ kind: "sending" })
+        let res: Response
         try {
-          const res = await fetch("/api/luzamiga/items", {
+          res = await fetch("/api/luzamiga/items", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),
           })
-          if (res.status === 401) {
-            setStatus({ kind: "error", message: t("report.loginNeeded") })
-            return
-          }
-          if (!res.ok) throw new Error("bad response")
-          setStatus({ kind: "ok", message: t("userReport.success") })
-          setNote("")
-          setSelected(null)
         } catch {
-          // sin conexión: encolar para sincronizar al reconectar
+          // Sin conexión de verdad (el fetch ni se completó): encolar para
+          // sincronizar al reconectar.
           await enqueueItem(payload)
           setStatus({ kind: "queued", message: t("userReport.queued") })
           setNote("")
           setSelected(null)
+          return
         }
+
+        if (res.status === 401) {
+          setStatus({ kind: "error", message: t("report.loginNeeded") })
+          return
+        }
+        if (!res.ok) {
+          const data = await res.json().catch(() => null)
+          setStatus({ kind: "error", message: data?.error ?? "No pudimos enviar tu reporte. Inténtalo de nuevo." })
+          return
+        }
+        setStatus({ kind: "ok", message: t("userReport.success") })
+        setNote("")
+        setSelected(null)
       },
       () => setStatus({ kind: "error", message: t("map.geoDenied") }),
       { enableHighAccuracy: true, timeout: 10_000 },
