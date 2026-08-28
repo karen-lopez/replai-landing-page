@@ -10,10 +10,22 @@ export interface User {
   name: string
   city: string
   phone: string
+  /** Requisito único para poder publicar comercios: verificación con CCB. */
+  businessVerified: boolean
 }
 
-interface StoredUser extends User {
+export interface BusinessVerification {
+  businessName: string
+  ccbNumber: string
+  fileName: string
+  fileType: string
+  fileDataBase64: string
+  submittedAt: string
+}
+
+interface StoredUser extends Omit<User, "businessVerified"> {
   passwordHash: string
+  businessVerification?: BusinessVerification
 }
 
 interface Session {
@@ -53,7 +65,14 @@ function verifyPassword(password: string, stored: string): boolean {
 }
 
 function publicUser(u: StoredUser): User {
-  return { id: u.id, email: u.email, name: u.name, city: u.city, phone: u.phone }
+  return {
+    id: u.id,
+    email: u.email,
+    name: u.name,
+    city: u.city,
+    phone: u.phone,
+    businessVerified: Boolean(u.businessVerification),
+  }
 }
 
 export interface RegisterInput {
@@ -114,4 +133,25 @@ export function destroySession(token: string | undefined): void {
   if (!token) return
   const store = getStore()
   store.sessions = store.sessions.filter((s) => s.token !== token)
+}
+
+export interface BusinessVerificationInput {
+  businessName: string
+  ccbNumber: string
+  fileName: string
+  fileType: string
+  fileDataBase64: string
+}
+
+/** Registra el CCB del dueño de un comercio. Único requisito para poder
+ * publicar comercios; una vez enviado queda verificado permanentemente. */
+export function submitBusinessVerification(
+  userId: string,
+  input: BusinessVerificationInput,
+): { user: User } | { error: string } {
+  const store = getStore()
+  const user = store.users.find((u) => u.id === userId)
+  if (!user) return { error: "Usuario no encontrado." }
+  user.businessVerification = { ...input, submittedAt: new Date().toISOString() }
+  return { user: publicUser(user) }
 }

@@ -34,7 +34,7 @@ export const dictionary = {
     "map.title": "Mapa de la comunidad",
     "map.subtitle":
       "Negocios, eventos y reportes en tiempo real por toda Colombia. Se actualiza automáticamente.",
-    "map.myLocation": "Mi ubicación",
+    "map.myLocation": "Mostrar mi ubicación",
     "map.locating": "Ubicando…",
     "map.live": "En vivo",
     "map.updated": "Actualizado",
@@ -110,7 +110,7 @@ export const dictionary = {
 
     "map.title": "Community map",
     "map.subtitle": "Businesses, events and reports in real time across Colombia. Updates automatically.",
-    "map.myLocation": "My location",
+    "map.myLocation": "Show my location",
     "map.locating": "Locating…",
     "map.live": "Live",
     "map.updated": "Updated",
