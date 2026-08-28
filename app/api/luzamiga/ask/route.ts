@@ -24,12 +24,18 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Escribe una pregunta." }, { status: 400 })
   }
 
+  const rawHistory = Array.isArray(body.history) ? body.history : []
+  const history = rawHistory
+    .filter((turn): turn is { role: unknown; text: unknown } => typeof turn === "object" && turn !== null)
+    .map((turn) => ({ role: turn.role === "bot" ? "bot" : "user", text: String((turn as { text?: unknown }).text ?? "") }))
+    .filter((turn) => turn.text.trim().length > 0)
+
   let upstream: Response
   try {
     upstream = await fetch(`${botUrl}/api/ask`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message }),
+      body: JSON.stringify({ message, history }),
       signal: AbortSignal.timeout(15_000),
     })
   } catch {

@@ -39,6 +39,10 @@ export function ChatWidget() {
     const question = input.trim()
     if (!question || loading) return
 
+    // Snapshot before appending the new question — this is what Gemini needs
+    // as prior context to resolve follow-ups like "¿y a qué hora?".
+    const history = messages.map((m) => ({ role: m.role, text: m.text }))
+
     setMessages((current) => [...current, { role: "user", text: question }])
     setInput("")
     setLoading(true)
@@ -47,7 +51,7 @@ export function ChatWidget() {
       const res = await fetch("/api/luzamiga/ask", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: question }),
+        body: JSON.stringify({ message: question, history }),
       })
       const data = await res.json()
 
