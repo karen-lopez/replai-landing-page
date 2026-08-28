@@ -1,48 +1,50 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { CATEGORIES, CATEGORY_MAP, type CategoryId } from "./categories"
 import { ChevronLeft, ChevronRight, Instagram, Map, MapPin, Phone, Store, UserPlus } from "lucide-react"
 import { useItems } from "./map/use-items"
 import { useAuth } from "./auth/auth-provider"
 import { useT } from "./i18n/language-provider"
-import { MunicipalityAutocomplete } from "./municipality-autocomplete"
+import { useCityFilter } from "./city-filter-provider"
 import { PublishListingDialog } from "./publish-listing-dialog"
 import { BusinessVerificationDialog } from "./business-verification-dialog"
-import { SCOPED_MUNICIPALITIES } from "@/lib/luzamiga/municipalities"
 
 const PAGE_SIZE = 3
+
+function normalize(value: string) {
+  return value.toLocaleLowerCase("es").normalize("NFD").replace(/[̀-ͯ]/g, "")
+}
 
 export function LuzAmigaCommerce() {
   const { user, openRegister } = useAuth()
   const { t } = useT()
+  const { city } = useCityFilter()
   const [filter, setFilter] = useState<CategoryId | "all">("all")
   const [page, setPage] = useState(1)
-  const [municipality, setMunicipality] = useState("")
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [publishOpen, setPublishOpen] = useState(false)
   const [verifyOpen, setVerifyOpen] = useState(false)
   const { items, refresh } = useItems()
 
   const listings = items.filter((item) => item.kind === "help" || item.kind === "event")
-  const normalizedMunicipality = municipality.trim().toLocaleLowerCase("es").normalize("NFD").replace(/[̀-ͯ]/g, "")
+  const normalizedCity = city ? normalize(city) : ""
   const filtered = listings.filter((item) => {
     const matchesCategory = filter === "all" || item.category === filter
-    const searchableLocation = `${item.city ?? ""} ${item.address ?? ""}`.toLocaleLowerCase("es").normalize("NFD").replace(/[̀-ͯ]/g, "")
-    return matchesCategory && (!normalizedMunicipality || searchableLocation.includes(normalizedMunicipality))
+    const searchableLocation = normalize(`${item.city ?? ""} ${item.address ?? ""}`)
+    return matchesCategory && (!normalizedCity || searchableLocation.includes(normalizedCity))
   })
   const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
   const currentPage = Math.min(page, pageCount)
   const visible = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
 
+  useEffect(() => {
+    setPage(1)
+  }, [city])
+
   function changeFilter(nextFilter: CategoryId | "all") {
     setFilter(nextFilter)
-    setPage(1)
-  }
-
-  function changeMunicipality(value: string) {
-    setMunicipality(value)
     setPage(1)
   }
 
@@ -68,7 +70,7 @@ export function LuzAmigaCommerce() {
             </h2>
             <p className="mt-3 text-lg leading-relaxed" style={{ color: "#6B5B45" }}>
               Descubre los negocios de la comunidad que se están reactivando: reaperturas, eventos y promociones.
-              Filtra por etiqueta o municipio para encontrarlos.
+              Filtra por etiqueta, o elige tu ciudad arriba.
             </p>
           </div>
 
@@ -118,23 +120,17 @@ export function LuzAmigaCommerce() {
           ))}
         </div>
 
-        <div className="mb-8 max-w-xl">
-          <label htmlFor="municipality-filter" className="mb-2 block text-sm font-semibold" style={{ color: "#3A2E1A" }}>
-            Filtrar por municipio de Colombia
-          </label>
-          <MunicipalityAutocomplete
-            id="municipality-filter"
-            value={municipality}
-            onChange={changeMunicipality}
-            municipalities={SCOPED_MUNICIPALITIES}
-            placeholder="Buscar municipio de Colombia"
-          />
-          <p className="mt-2 text-xs text-[#8A7659]">
-            {SCOPED_MUNICIPALITIES.length} municipios disponibles
-          </p>
-        </div>
-
         {/* Grid */}
+        {filtered.length === 0 ? (
+          <div
+            className="rounded-2xl border border-dashed p-8 text-center"
+            style={{ borderColor: "#E4C79A", backgroundColor: "#FFFDF8" }}
+          >
+            <p style={{ color: "#6B5B45" }}>
+              {city ? `Todavía no hay comercios publicados en ${city}.` : "Todavía no hay comercios publicados."}
+            </p>
+          </div>
+        ) : (
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {visible.map((listing) => {
             const category = listing.category ?? "events"
@@ -223,6 +219,7 @@ export function LuzAmigaCommerce() {
             )
           })}
         </div>
+        )}
 
         {pageCount > 1 ? (
           <nav className="mt-8 flex items-center justify-center gap-4" aria-label="Paginación de comercios">

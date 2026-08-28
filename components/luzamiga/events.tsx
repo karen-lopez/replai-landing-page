@@ -5,15 +5,26 @@ import { Button } from "@/components/ui/button"
 import { Calendar, CalendarHeart, Instagram, Map, MapPin, Sparkles, UserPlus } from "lucide-react"
 import { useItems } from "./map/use-items"
 import { useAuth } from "./auth/auth-provider"
+import { useCityFilter } from "./city-filter-provider"
 import { PublishEventDialog } from "./publish-event-dialog"
+
+function normalize(value: string) {
+  return value.toLocaleLowerCase("es").normalize("NFD").replace(/[̀-ͯ]/g, "")
+}
 
 export function LuzAmigaEvents() {
   const { user, openRegister } = useAuth()
+  const { city } = useCityFilter()
   const { items, refresh } = useItems()
   const [publishOpen, setPublishOpen] = useState(false)
   const [expandedId, setExpandedId] = useState<string | null>(null)
 
-  const events = items.filter((item) => item.kind === "event")
+  const normalizedCity = city ? normalize(city) : ""
+  const events = items.filter((item) => {
+    if (item.kind !== "event") return false
+    if (!normalizedCity) return true
+    return normalize(`${item.city ?? ""} ${item.address ?? ""}`).includes(normalizedCity)
+  })
 
   function handlePublishClick() {
     if (!user) {
@@ -69,7 +80,9 @@ export function LuzAmigaEvents() {
             style={{ borderColor: "#E4C79A", backgroundColor: "#FFFDF8" }}
           >
             <p style={{ color: "#6B5B45" }}>
-              Todavía no hay eventos publicados. ¡Sé la primera persona en compartir uno!
+              {city
+                ? `Todavía no hay eventos publicados en ${city}.`
+                : "Todavía no hay eventos publicados. ¡Sé la primera persona en compartir uno!"}
             </p>
           </div>
         ) : (
