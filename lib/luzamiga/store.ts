@@ -25,6 +25,7 @@ type CulturalEvent = {
   description: string
   latitude: number
   longitude: number
+  sourceUrl: string
 }
 
 type Business = {
@@ -37,9 +38,10 @@ type Business = {
   address: string
   latitude: number
   longitude: number
+  sourceUrl: string
 }
 
-const earthquakeData = rawEarthquakeData as {
+const earthquakeData = rawEarthquakeData as unknown as {
   culturalEvents: CulturalEvent[]
   businesses: Business[]
   affectedCities: DatasetCity[]
@@ -58,7 +60,7 @@ interface LuzAmigaStore {
 }
 
 const g = globalThis as unknown as { __luzAmigaStore?: LuzAmigaStore }
-const SEED_VERSION = 7
+const SEED_VERSION = 8
 const ALLOWED_CITIES = new Set(["armenia", "cali", "manizales", "pereira", "quibdo"])
 const LEGACY_SEED_IDS = new Set([
   "help-1",
@@ -228,7 +230,7 @@ function seed(): MapItem[] {
       kind: "event" as const,
       category: "events" as const,
       title: event.title,
-      description: `${event.description} Evento cultural sintetico para demostracion.`,
+      description: event.description,
       author: event.organizer,
       contact: `${event.venue} · ${event.date}`,
       city: event.municipality,
@@ -242,7 +244,7 @@ function seed(): MapItem[] {
       kind: "help" as const,
       category: business.category as HelpCategory,
       title: business.name,
-      description: `${business.description} Negocio sintetico para demostracion.`,
+      description: business.description,
       author: business.name,
       contact: business.contact,
       city: business.municipality,
@@ -295,10 +297,10 @@ function getStore(): LuzAmigaStore {
     g.__luzAmigaStore = { items: seed(), updatedAt: Date.now(), seedVersion: SEED_VERSION }
   } else if (g.__luzAmigaStore.seedVersion !== SEED_VERSION) {
     const store = g.__luzAmigaStore
-    store.items = store.items.filter((item) => !LEGACY_SEED_IDS.has(item.id))
-    const existingIds = new Set(store.items.map((item) => item.id))
-    const missingSeedItems = seed().filter((item) => !existingIds.has(item.id))
-    store.items.push(...missingSeedItems)
+    const currentSeed = seed()
+    const seedIds = new Set(currentSeed.map((item) => item.id))
+    store.items = store.items.filter((item) => !LEGACY_SEED_IDS.has(item.id) && !seedIds.has(item.id))
+    store.items.push(...currentSeed)
     store.seedVersion = SEED_VERSION
     store.updatedAt = Date.now()
   }

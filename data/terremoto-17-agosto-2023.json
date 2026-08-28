@@ -1,70 +1,75 @@
 {
   "dataset": "terremoto-colombia-2023-08-17",
-  "dataType": "demo-synthetic",
+  "dataType": "mixed-verified-public-data",
   "lastReviewed": "2026-08-28",
   "title": "Sismo del 17 de agosto de 2023 en Colombia",
   "dateCorrection": "La fecha del evento documentado es el 17 de agosto de 2023, no el 10 de agosto.",
   "event": {
-    "date": "2023-08-17",
+    "culturalEvents": [
     "localTime": "12:04",
     "magnitude": 6.1,
-    "depthKm": 10,
+        "title": "Fiestas de la Cosecha de Pereira",
     "epicenter": {
       "municipality": "El Calvario",
-      "department": "Meta",
-      "latitude": 4.352,
-      "longitude": -73.711
-    },
+        "venue": "Pereira, lugar por confirmar",
+        "date": "Fecha 2026 por confirmar",
+        "organizer": "Alcaldia de Pereira",
+        "description": "Celebracion cultural recurrente de la ciudad. Consulta la programacion oficial antes de asistir.",
     "mainAftershock": {
-      "date": "2023-08-17",
+        "longitude": -75.6961,
+        "sourceUrl": "https://www.pereira.gov.co/"
       "localTime": "12:17",
       "magnitude": 5.6,
       "near": "Restrepo, Meta"
-    }
+        "title": "Feria de Manizales",
   },
   "historicalEvents": [
-    {
-      "id": "quetame-2008",
-      "date": "2008-05-24",
-      "title": "Sismo de Quetame",
+        "venue": "Manizales, lugares segun programacion oficial",
+        "date": "Fecha 2026 por confirmar",
+        "organizer": "Alcaldia de Manizales",
+        "description": "Fiesta cultural recurrente de Manizales. Consulta la programacion oficial antes de asistir.",
       "magnitude": 5.7,
-      "epicenter": "Quetame, Cundinamarca",
+        "longitude": -75.5138,
+        "sourceUrl": "https://manizales.gov.co/"
       "sourceIds": ["sgc-quetame-2008"],
       "affectedCities": [
         { "municipality": "Quetame", "department": "Cundinamarca", "latitude": 4.333, "longitude": -73.861, "impactLevel": "high", "reportedEffects": ["colapso de construcciones", "danos en viviendas", "demolicion de la iglesia"], "evidenceLevel": "official-report" },
-        { "municipality": "El Calvario", "department": "Meta", "latitude": 4.352, "longitude": -73.711, "impactLevel": "high", "reportedEffects": ["danos en viviendas", "danos en escuelas y hospitales", "movimientos en masa"], "evidenceLevel": "official-report" },
+        "title": "Festival de Musica del Pacifico Petronio Alvarez",
         { "municipality": "San Juanito", "department": "Meta", "latitude": 4.46, "longitude": -73.68, "impactLevel": "high", "reportedEffects": ["danos en viviendas", "danos en iglesias y escuelas", "demoliciones"], "evidenceLevel": "official-report" },
         { "municipality": "Guayabetal", "department": "Cundinamarca", "latitude": 4.214, "longitude": -73.817, "impactLevel": "low", "reportedEffects": ["danos leves"], "evidenceLevel": "official-report" },
-        { "municipality": "Bogota", "department": "Bogota D.C.", "latitude": 4.711, "longitude": -74.072, "impactLevel": "low", "reportedEffects": ["averias menores", "sismo sentido fuertemente"], "evidenceLevel": "official-report" },
-        { "municipality": "Villavicencio", "department": "Meta", "latitude": 4.142, "longitude": -73.626, "impactLevel": "low", "reportedEffects": ["averias menores", "sismo sentido fuertemente"], "evidenceLevel": "official-report" },
-        { "municipality": "Acacias", "department": "Meta", "latitude": 3.987, "longitude": -73.765, "impactLevel": "low", "reportedEffects": ["averias menores", "sismo sentido fuertemente"], "evidenceLevel": "official-report" },
-        { "municipality": "Restrepo", "department": "Meta", "latitude": 4.259, "longitude": -73.562, "impactLevel": "low", "reportedEffects": ["averias menores", "sismo sentido fuertemente"], "evidenceLevel": "official-report" }
+        "venue": "Teatro al Aire Libre Los Cristales y Ciudadela Petronio",
+        "date": "Programacion 2026 por confirmar",
+        "organizer": "Secretaria de Cultura de Cali",
+        "description": "Festival cultural real de musica, cocina y tradiciones del Pacifico colombiano.",
       ]
-    },
+        "longitude": -76.532,
+        "sourceUrl": "https://www.cali.gov.co/cultura/publicaciones/193418/el-festival-petronio-alvarez-lanzo-la-cancion-oficial-de-la-version-30-y-una-programacion-imperdible-para-celebrar-un-legado-que-retumba/"
     {
       "id": "meta-1917",
       "date": "1917-08-31",
-      "title": "Terremoto del Meta de 1917",
+        "title": "Festival Internacional de Artes de Armenia",
       "magnitude": 7.1,
       "epicenter": "Castilla La Nueva, Meta",
-      "sourceIds": ["sgc-bogota-1917", "usgs-1917"],
-      "affectedCities": [
-        { "municipality": "Villavicencio", "department": "Meta", "latitude": 4.142, "longitude": -73.626, "impactLevel": "high", "reportedEffects": ["danos y colapso de construcciones", "danos en la iglesia", "danos en viviendas"], "evidenceLevel": "official-report" },
-        { "municipality": "Bogota", "department": "Bogota D.C.", "latitude": 4.711, "longitude": -74.072, "impactLevel": "high", "reportedEffects": ["mas de 300 edificaciones averiadas", "edificios destruidos", "danos en iglesias y hospitales"], "evidenceLevel": "official-report" }
+        "venue": "Armenia, lugar por confirmar",
+        "date": "Fecha 2026 por confirmar",
+        "organizer": "Alcaldia de Armenia",
+        "description": "Festival cultural documentado por la administracion municipal. Confirma la proxima fecha en la agenda oficial.",
       ]
-    },
+        "longitude": -75.6811,
+        "sourceUrl": "https://www.armenia.gov.co/"
     {
       "id": "choachi-1966",
       "date": "1966-09-04",
-      "title": "Sismo de Choachi",
+        "title": "Fiestas de San Pacho",
       "magnitude": 5.3,
       "epicenter": "Choachi, Cundinamarca",
-      "sourceIds": ["sgc-choachi-1966"],
-      "affectedCities": [
-        { "municipality": "Bogota", "department": "Bogota D.C.", "latitude": 4.711, "longitude": -74.072, "impactLevel": "high", "reportedEffects": ["viviendas gravemente afectadas", "grietas en fachadas", "personas fallecidas y heridas"], "evidenceLevel": "official-report" },
-        { "municipality": "Soacha", "department": "Cundinamarca", "latitude": 4.582, "longitude": -74.214, "impactLevel": "medium", "reportedEffects": ["intensidad EMS-98 VI registrada"], "evidenceLevel": "official-intensity" },
+        "venue": "Calles y barrios de Quibdo",
+        "date": "Septiembre-octubre; fecha 2026 por confirmar",
+        "organizer": "Organizacion de las Fiestas de San Pacho",
+        "description": "Fiesta tradicional de Quibdo reconocida como patrimonio cultural inmaterial de la humanidad.",
         { "municipality": "Villavicencio", "department": "Meta", "latitude": 4.142, "longitude": -73.626, "impactLevel": "low", "reportedEffects": ["intensidad EMS-98 IV registrada"], "evidenceLevel": "official-intensity" }
-      ]
+        "longitude": -76.658,
+        "sourceUrl": "https://www.mincultura.gov.co/"
     },
     {
       "id": "campoalegre-1967",
@@ -143,61 +148,66 @@
   "businesses": [
     {
       "id": "business-pereira-1",
-      "name": "Cafe y Oficios La Circunvalar",
+      "name": "Hacienda La Colina",
       "municipality": "Pereira",
       "category": "reopening",
-      "contact": "WhatsApp 314 620 1835",
-      "description": "Cafe, productos artesanales y servicios de emprendimientos locales.",
-      "address": "Sector Circunvalar, Pereira",
+      "contact": "Contacto en sitio oficial",
+      "description": "Hacienda de cafes especiales ubicada en Pereira.",
+      "address": "Direccion por confirmar en el sitio oficial",
       "latitude": 4.8133,
-      "longitude": -75.6961
+      "longitude": -75.6961,
+      "sourceUrl": "https://haciendalacolina.com/"
     },
     {
       "id": "business-manizales-1",
-      "name": "Mercado Local La 23",
+      "name": "Cafe Ocampo",
       "municipality": "Manizales",
       "category": "promotions",
-      "contact": "WhatsApp 317 508 2694",
-      "description": "Productos del campo y alimentos preparados por comerciantes de la ciudad.",
-      "address": "Centro, Manizales",
+      "contact": "Contacto en sitio oficial",
+      "description": "Marca de cafe de especialidad producida en Manizales.",
+      "address": "Direccion por confirmar en el sitio oficial",
       "latitude": 5.070,
-      "longitude": -75.5138
+      "longitude": -75.5138,
+      "sourceUrl": "https://cafeocampos.com/"
     },
     {
       "id": "business-cali-1",
-      "name": "Taller Pacifico Vivo",
+      "name": "Delirio",
       "municipality": "Cali",
       "category": "reopening",
-      "contact": "WhatsApp 311 745 2086",
-      "description": "Artesanias, instrumentos y productos culturales elaborados por familias de Cali.",
-      "address": "San Antonio, Cali",
+      "contact": "Contacto en sitio oficial",
+      "description": "Compania y espectaculo de salsa, circo y orquesta de Cali.",
+      "address": "Direccion por confirmar en el sitio oficial",
       "latitude": 3.4516,
-      "longitude": -76.532
+      "longitude": -76.532,
+      "sourceUrl": "https://delirio.com.co/"
     },
     {
       "id": "business-armenia-1",
-      "name": "Dulces y Cafe del Quindio",
+      "name": "Cafe Quindio",
       "municipality": "Armenia",
       "category": "promotions",
-      "contact": "WhatsApp 316 402 7195",
-      "description": "Cafe, dulces tradicionales y productos de pequenos productores del Quindio.",
-      "address": "Barrio Granada, Armenia",
+      "contact": "Contacto en sitio oficial",
+      "description": "Marca de cafe con tiendas listadas oficialmente en Armenia.",
+      "address": "Consulta las tiendas en el sitio oficial",
       "latitude": 4.5339,
-      "longitude": -75.6811
+      "longitude": -75.6811,
+      "sourceUrl": "https://www.cafequindio.com.co/pages/tiendas-cafe-quindio"
     },
     {
       "id": "business-quibdo-1",
-      "name": "Sabores del Atrato",
+      "name": "Quibdo Emprende",
       "municipality": "Quibdo",
       "category": "reopening",
-      "contact": "WhatsApp 318 560 1432",
-      "description": "Comida tradicional, bebidas y productos de emprendimientos familiares del Choco.",
-      "address": "Barrio Cesar Conto, Quibdo",
+      "contact": "Contacto en sitio oficial",
+      "description": "Plataforma de emprendimientos locales de Quibdo.",
+      "address": "Cra. 2 # 24A-32, segun ficha publica; confirmar con el negocio",
       "latitude": 5.692,
-      "longitude": -76.658
+      "longitude": -76.658,
+      "sourceUrl": "https://quibdoemprende.org/"
     }
   ],
-  "scopeNote": "Las ciudades listadas tuvieron reportes de afectaciones, evacuaciones, deslizamientos o cierres viales. Este dataset no contiene un conteo oficial de danos por municipio y sus marcadores se usan como datos de demostracion.",
+  "scopeNote": "Los nombres de negocios y eventos tienen fuentes publicas incluidas en cada registro. Las coordenadas de negocios y eventos son aproximadas a nivel de municipio cuando la fuente no publica una direccion exacta. Los reportes sismicos del mapa son una representacion historica para demostracion y no reemplazan reportes oficiales en tiempo real.",
   "affectedCities": [
     {
       "municipality": "El Calvario",
