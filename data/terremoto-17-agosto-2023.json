@@ -1,0 +1,443 @@
+{
+  "dataset": "terremoto-colombia-2023-08-17",
+  "dataType": "mixed-verified-public-data",
+  "lastReviewed": "2026-08-28",
+  "title": "Sismo del 17 de agosto de 2023 en Colombia",
+  "dateCorrection": "La fecha del evento documentado es el 17 de agosto de 2023, no el 10 de agosto.",
+  "event": {
+    "culturalEvents": [
+    "localTime": "12:04",
+    "magnitude": 6.1,
+        "title": "Fiestas de la Cosecha de Pereira",
+    "epicenter": {
+      "municipality": "El Calvario",
+        "venue": "Pereira, lugar por confirmar",
+        "date": "Fecha 2026 por confirmar",
+        "organizer": "Alcaldia de Pereira",
+        "description": "Celebracion cultural recurrente de la ciudad. Consulta la programacion oficial antes de asistir.",
+    "mainAftershock": {
+        "longitude": -75.6961,
+        "sourceUrl": "https://www.pereira.gov.co/"
+      "localTime": "12:17",
+      "magnitude": 5.6,
+      "near": "Restrepo, Meta"
+        "title": "Feria de Manizales",
+  },
+  "historicalEvents": [
+        "venue": "Manizales, lugares segun programacion oficial",
+        "date": "Fecha 2026 por confirmar",
+        "organizer": "Alcaldia de Manizales",
+    "event": {
+      "date": "2023-08-17",
+      "localTime": "12:04",
+      "magnitude": 6.1,
+      "depthKm": 10,
+      "epicenter": {
+        "municipality": "El Calvario",
+        "department": "Meta",
+        "latitude": 4.352,
+        "longitude": -73.711
+      },
+      "mainAftershock": {
+        "date": "2023-08-17",
+        "localTime": "12:17",
+        "magnitude": 5.6,
+        "near": "Restrepo, Meta"
+      }
+    },
+    "historicalEvents": [
+      {
+        "id": "quetame-2008",
+        "date": "2008-05-24",
+        "title": "Sismo de Quetame",
+        "affectedCities": [
+          { "municipality": "Quetame", "latitude": 4.333, "longitude": -73.861, "reportedEffects": ["danos en viviendas", "colapso de construcciones", "demolicion de la iglesia"] },
+          { "municipality": "El Calvario", "latitude": 4.352, "longitude": -73.711, "reportedEffects": ["danos en viviendas", "danos en escuelas y hospitales", "movimientos en masa"] },
+          { "municipality": "San Juanito", "latitude": 4.46, "longitude": -73.68, "reportedEffects": ["danos en viviendas", "danos en iglesias y escuelas"] },
+          { "municipality": "Guayabetal", "latitude": 4.214, "longitude": -73.817, "reportedEffects": ["danos leves"] },
+          { "municipality": "Bogota", "latitude": 4.711, "longitude": -74.072, "reportedEffects": ["averias menores", "sismo sentido fuertemente"] },
+          { "municipality": "Villavicencio", "latitude": 4.142, "longitude": -73.626, "reportedEffects": ["averias menores", "sismo sentido fuertemente"] },
+          { "municipality": "Acacias", "latitude": 3.987, "longitude": -73.765, "reportedEffects": ["averias menores", "sismo sentido fuertemente"] },
+          { "municipality": "Restrepo", "latitude": 4.259, "longitude": -73.562, "reportedEffects": ["averias menores", "sismo sentido fuertemente"] }
+        ]
+      },
+      {
+        "id": "meta-1917",
+        "date": "1917-08-31",
+        "title": "Terremoto del Meta de 1917",
+        "affectedCities": [
+          { "municipality": "Villavicencio", "latitude": 4.142, "longitude": -73.626, "reportedEffects": ["danos y colapso de construcciones", "danos en la iglesia", "danos en viviendas"] },
+          { "municipality": "Bogota", "latitude": 4.711, "longitude": -74.072, "reportedEffects": ["mas de 300 edificaciones averiadas", "edificios destruidos", "danos en iglesias y hospitales"] }
+        ]
+      },
+      {
+        "id": "choachi-1966",
+        "date": "1966-09-04",
+        "title": "Sismo de Choachi",
+        "affectedCities": [
+          { "municipality": "Bogota", "latitude": 4.711, "longitude": -74.072, "reportedEffects": ["viviendas gravemente afectadas", "grietas en fachadas", "personas fallecidas y heridas"] },
+          { "municipality": "Soacha", "latitude": 4.582, "longitude": -74.214, "reportedEffects": ["intensidad EMS-98 VI registrada"] },
+          { "municipality": "Villavicencio", "latitude": 4.142, "longitude": -73.626, "reportedEffects": ["intensidad EMS-98 IV registrada"] }
+        ]
+      },
+      {
+        "id": "campoalegre-1967",
+        "date": "1967-02-09",
+        "title": "Sismo de Campoalegre",
+        "affectedCities": [
+          { "municipality": "Bogota", "latitude": 4.711, "longitude": -74.072, "reportedEffects": ["danos en viviendas e iglesias", "danos en edificios y cementerios"] }
+        ]
+      }
+    ],
+    "culturalEvents": [
+      { "id": "cultural-pereira-1", "title": "Fiestas de la Cosecha de Pereira", "municipality": "Pereira", "venue": "Pereira, lugar por confirmar", "date": "Fecha 2026 por confirmar", "organizer": "Alcaldia de Pereira", "description": "Celebracion cultural recurrente de la ciudad. Consulta la programacion oficial antes de asistir.", "latitude": 4.8133, "longitude": -75.6961, "sourceUrl": "https://www.pereira.gov.co/" },
+      { "id": "cultural-manizales-1", "title": "Feria de Manizales", "municipality": "Manizales", "venue": "Manizales, lugares segun programacion oficial", "date": "Fecha 2026 por confirmar", "organizer": "Alcaldia de Manizales", "description": "Fiesta cultural recurrente de Manizales. Consulta la programacion oficial antes de asistir.", "latitude": 5.07, "longitude": -75.5138, "sourceUrl": "https://manizales.gov.co/" },
+      { "id": "cultural-cali-1", "title": "Festival de Musica del Pacifico Petronio Alvarez", "municipality": "Cali", "venue": "Teatro al Aire Libre Los Cristales y Ciudadela Petronio", "date": "Programacion 2026 por confirmar", "organizer": "Secretaria de Cultura de Cali", "description": "Festival cultural real de musica, cocina y tradiciones del Pacifico colombiano.", "latitude": 3.4516, "longitude": -76.532, "sourceUrl": "https://www.cali.gov.co/cultura/publicaciones/193418/el-festival-petronio-alvarez-lanzo-la-cancion-oficial-de-la-version-30-y-una-programacion-imperdible-para-celebrar-un-legado-que-retumba/" },
+      { "id": "cultural-armenia-1", "title": "Festival Internacional de Artes de Armenia", "municipality": "Armenia", "venue": "Armenia, lugar por confirmar", "date": "Fecha 2026 por confirmar", "organizer": "Alcaldia de Armenia", "description": "Festival cultural documentado por la administracion municipal. Confirma la proxima fecha en la agenda oficial.", "latitude": 4.5339, "longitude": -75.6811, "sourceUrl": "https://www.armenia.gov.co/" },
+      { "id": "cultural-quibdo-1", "title": "Fiestas de San Pacho", "municipality": "Quibdo", "venue": "Calles y barrios de Quibdo", "date": "Septiembre-octubre; fecha 2026 por confirmar", "organizer": "Organizacion de las Fiestas de San Pacho", "description": "Fiesta tradicional de Quibdo reconocida como patrimonio cultural inmaterial de la humanidad.", "latitude": 5.692, "longitude": -76.658, "sourceUrl": "https://www.mincultura.gov.co/" }
+    ],
+    "businesses": [
+      { "id": "business-pereira-1", "name": "Hacienda La Colina", "municipality": "Pereira", "category": "reopening", "contact": "Contacto en sitio oficial", "description": "Hacienda de cafes especiales ubicada en Pereira.", "address": "Direccion por confirmar en el sitio oficial", "latitude": 4.8133, "longitude": -75.6961, "sourceUrl": "https://haciendalacolina.com/" },
+      { "id": "business-manizales-1", "name": "Cafe Ocampo", "municipality": "Manizales", "category": "promotions", "contact": "Contacto en sitio oficial", "description": "Marca de cafe de especialidad producida en Manizales.", "address": "Direccion por confirmar en el sitio oficial", "latitude": 5.07, "longitude": -75.5138, "sourceUrl": "https://cafeocampos.com/" },
+      { "id": "business-cali-1", "name": "Delirio", "municipality": "Cali", "category": "reopening", "contact": "Contacto en sitio oficial", "description": "Compania y espectaculo de salsa, circo y orquesta de Cali.", "address": "Direccion por confirmar en el sitio oficial", "latitude": 3.4516, "longitude": -76.532, "sourceUrl": "https://delirio.com.co/" },
+      { "id": "business-armenia-1", "name": "Cafe Quindio", "municipality": "Armenia", "category": "promotions", "contact": "Contacto en sitio oficial", "description": "Marca de cafe con tiendas listadas oficialmente en Armenia.", "address": "Consulta las tiendas en el sitio oficial", "latitude": 4.5339, "longitude": -75.6811, "sourceUrl": "https://www.cafequindio.com.co/pages/tiendas-cafe-quindio" },
+      { "id": "business-quibdo-1", "name": "Quibdo Emprende", "municipality": "Quibdo", "category": "reopening", "contact": "Contacto en sitio oficial", "description": "Plataforma de emprendimientos locales de Quibdo.", "address": "Cra. 2 # 24A-32, segun ficha publica; confirmar con el negocio", "latitude": 5.692, "longitude": -76.658, "sourceUrl": "https://quibdoemprende.org/" }
+    ],
+    "affectedCities": [
+      { "municipality": "El Calvario", "latitude": 4.352, "longitude": -73.711, "reportedEffects": ["danos en viviendas", "grietas", "evacuaciones"] },
+      { "municipality": "San Juanito", "latitude": 4.46, "longitude": -73.68, "reportedEffects": ["danos en viviendas", "afectaciones en infraestructura"] },
+      { "municipality": "Villavicencio", "latitude": 4.142, "longitude": -73.626, "reportedEffects": ["evacuaciones preventivas", "grietas en edificaciones"] },
+      { "municipality": "Restrepo", "latitude": 4.259, "longitude": -73.562, "reportedEffects": ["afectaciones en viviendas", "replica cercana"] },
+      { "municipality": "Acacias", "latitude": 3.987, "longitude": -73.765, "reportedEffects": ["evacuaciones preventivas", "revision de edificaciones"] },
+      { "municipality": "Guayabetal", "latitude": 4.214, "longitude": -73.817, "reportedEffects": ["deslizamientos", "cierre vial"] },
+      { "municipality": "Quetame", "latitude": 4.333, "longitude": -73.861, "reportedEffects": ["deslizamientos", "afectaciones en viviendas", "cierre vial"] },
+      { "municipality": "Soacha", "latitude": 4.582, "longitude": -74.214, "reportedEffects": ["evacuaciones preventivas", "revision de edificaciones"] },
+      { "municipality": "Bogota", "latitude": 4.711, "longitude": -74.072, "reportedEffects": ["evacuaciones", "grietas en edificaciones", "afectaciones menores"] }
+    ],
+    "sources": [
+      { "id": "sgc-main", "publisher": "Servicio Geologico Colombiano", "url": "https://www2.sgc.gov.co/Noticias/Paginas/Comunicado-sismo-17-de-agosto-2023.aspx" },
+      { "id": "sgc-quetame-2008", "publisher": "Servicio Geologico Colombiano", "url": "https://sish.sgc.gov.co/visor/sesionServlet?metodo=irAInfoDetallada&idSismo=49" },
+      { "id": "sgc-bogota-1917", "publisher": "Servicio Geologico Colombiano", "url": "https://www2.sgc.gov.co/Noticias/Paginas/31-DE-AGOSTO%2C-100-A%C3%91OS-DEL-%C3%9ALTIMO-GRAN-TERREMOTO-EN-BOGOT%C3%81.aspx" },
+      { "id": "sgc-choachi-1966", "publisher": "Servicio Geologico Colombiano", "url": "https://sish.sgc.gov.co/visor/sesionServlet?metodo=irAInfoDetallada&idSismo=42" },
+      { "id": "rtvc-1967", "publisher": "Senal Memoria RTVC", "url": "https://www.senalmemoria.co/sismo-bogota-febrero-1967" }
+    ]
+      "magnitude": 5.7,
+        "longitude": -75.5138,
+        "sourceUrl": "https://manizales.gov.co/"
+      "sourceIds": ["sgc-quetame-2008"],
+      "affectedCities": [
+        { "municipality": "Quetame", "department": "Cundinamarca", "latitude": 4.333, "longitude": -73.861, "impactLevel": "high", "reportedEffects": ["colapso de construcciones", "danos en viviendas", "demolicion de la iglesia"], "evidenceLevel": "official-report" },
+        "title": "Festival de Musica del Pacifico Petronio Alvarez",
+        { "municipality": "San Juanito", "department": "Meta", "latitude": 4.46, "longitude": -73.68, "impactLevel": "high", "reportedEffects": ["danos en viviendas", "danos en iglesias y escuelas", "demoliciones"], "evidenceLevel": "official-report" },
+        { "municipality": "Guayabetal", "department": "Cundinamarca", "latitude": 4.214, "longitude": -73.817, "impactLevel": "low", "reportedEffects": ["danos leves"], "evidenceLevel": "official-report" },
+        "venue": "Teatro al Aire Libre Los Cristales y Ciudadela Petronio",
+        "date": "Programacion 2026 por confirmar",
+        "organizer": "Secretaria de Cultura de Cali",
+        "description": "Festival cultural real de musica, cocina y tradiciones del Pacifico colombiano.",
+      ]
+        "longitude": -76.532,
+        "sourceUrl": "https://www.cali.gov.co/cultura/publicaciones/193418/el-festival-petronio-alvarez-lanzo-la-cancion-oficial-de-la-version-30-y-una-programacion-imperdible-para-celebrar-un-legado-que-retumba/"
+    {
+      "id": "meta-1917",
+      "date": "1917-08-31",
+        "title": "Festival Internacional de Artes de Armenia",
+      "magnitude": 7.1,
+      "epicenter": "Castilla La Nueva, Meta",
+        "venue": "Armenia, lugar por confirmar",
+        "date": "Fecha 2026 por confirmar",
+        "organizer": "Alcaldia de Armenia",
+        "description": "Festival cultural documentado por la administracion municipal. Confirma la proxima fecha en la agenda oficial.",
+      ]
+        "longitude": -75.6811,
+        "sourceUrl": "https://www.armenia.gov.co/"
+    {
+      "id": "choachi-1966",
+      "date": "1966-09-04",
+        "title": "Fiestas de San Pacho",
+      "magnitude": 5.3,
+      "epicenter": "Choachi, Cundinamarca",
+        "venue": "Calles y barrios de Quibdo",
+        "date": "Septiembre-octubre; fecha 2026 por confirmar",
+        "organizer": "Organizacion de las Fiestas de San Pacho",
+        "description": "Fiesta tradicional de Quibdo reconocida como patrimonio cultural inmaterial de la humanidad.",
+        { "municipality": "Villavicencio", "department": "Meta", "latitude": 4.142, "longitude": -73.626, "impactLevel": "low", "reportedEffects": ["intensidad EMS-98 IV registrada"], "evidenceLevel": "official-intensity" }
+        "longitude": -76.658,
+        "sourceUrl": "https://www.mincultura.gov.co/"
+    },
+    {
+      "id": "campoalegre-1967",
+      "date": "1967-02-09",
+      "title": "Sismo de Campoalegre",
+      "magnitude": 7.0,
+      "epicenter": "Campoalegre, Huila",
+      "sourceIds": ["rtvc-1967"],
+      "affectedCities": [
+        { "municipality": "Bogota", "department": "Bogota D.C.", "latitude": 4.711, "longitude": -74.072, "impactLevel": "medium", "reportedEffects": ["danos en viviendas e iglesias", "danos en edificios y cementerios"], "evidenceLevel": "reported" }
+      ]
+    }
+  ],
+  "culturalEvents": [
+    {
+      "id": "cultural-pereira-1",
+      "title": "Festival de musica y memoria cafetera",
+      "municipality": "Pereira",
+      "department": "Risaralda",
+      "venue": "Plaza Civica Ciudad Victoria",
+      "date": "2026-09-05 15:00",
+      "organizer": "Red Cultural de Pereira",
+      "description": "Presentaciones musicales, relatos de barrio y muestras de emprendimientos de la comunidad.",
+      "latitude": 4.8133,
+      "longitude": -75.6961
+    },
+    {
+      "id": "cultural-manizales-1",
+      "title": "Encuentro de teatro comunitario",
+      "municipality": "Manizales",
+      "department": "Caldas",
+      "venue": "Centro Cultural Rogelio Salmona",
+      "date": "2026-09-12 14:00",
+      "organizer": "Colectivo Escena Caldense",
+      "description": "Obras y talleres abiertos para fortalecer la participacion cultural de los barrios.",
+      "latitude": 5.070,
+      "longitude": -75.5138
+    },
+    {
+      "id": "cultural-cali-1",
+      "title": "Muestra de danza y cocina del Pacifico",
+      "municipality": "Cali",
+      "department": "Valle del Cauca",
+      "venue": "Boulevard del Rio",
+      "date": "2026-09-19 16:00",
+      "organizer": "Circuito Cultural de Cali",
+      "description": "Danza, musica y cocina tradicional para celebrar la diversidad cultural de la ciudad.",
+      "latitude": 3.4516,
+      "longitude": -76.532
+    },
+    {
+      "id": "cultural-armenia-1",
+      "title": "Feria de artes y saberes del Quindio",
+      "municipality": "Armenia",
+      "department": "Quindio",
+      "venue": "Centro Cultural Metropolitano",
+      "date": "2026-09-26 10:00",
+      "organizer": "Mesa Cultural del Quindio",
+      "description": "Artesanias, musica y talleres para reconocer los saberes de las comunidades locales.",
+      "latitude": 4.5339,
+      "longitude": -75.6811
+    },
+    {
+      "id": "cultural-quibdo-1",
+      "title": "Noche de cantos y tradiciones del Choco",
+      "municipality": "Quibdo",
+      "department": "Choco",
+      "venue": "Malecón de Quibdo",
+      "date": "2026-10-03 17:00",
+      "organizer": "Colectivo Cultural del Choco",
+      "description": "Cantos, percusion y relatos tradicionales para reunir a la comunidad junto al rio Atrato.",
+      "latitude": 5.692,
+      "longitude": -76.658
+    }
+  ],
+  "businesses": [
+    {
+      "id": "business-pereira-1",
+      "name": "Hacienda La Colina",
+      "municipality": "Pereira",
+      "category": "reopening",
+      "contact": "Contacto en sitio oficial",
+      "description": "Hacienda de cafes especiales ubicada en Pereira.",
+      "address": "Direccion por confirmar en el sitio oficial",
+      "latitude": 4.8133,
+      "longitude": -75.6961,
+      "sourceUrl": "https://haciendalacolina.com/"
+    },
+    {
+      "id": "business-manizales-1",
+      "name": "Cafe Ocampo",
+      "municipality": "Manizales",
+      "category": "promotions",
+      "contact": "Contacto en sitio oficial",
+      "description": "Marca de cafe de especialidad producida en Manizales.",
+      "address": "Direccion por confirmar en el sitio oficial",
+      "latitude": 5.070,
+      "longitude": -75.5138,
+      "sourceUrl": "https://cafeocampos.com/"
+    },
+    {
+      "id": "business-cali-1",
+      "name": "Delirio",
+      "municipality": "Cali",
+      "category": "reopening",
+      "contact": "Contacto en sitio oficial",
+      "description": "Compania y espectaculo de salsa, circo y orquesta de Cali.",
+      "address": "Direccion por confirmar en el sitio oficial",
+      "latitude": 3.4516,
+      "longitude": -76.532,
+      "sourceUrl": "https://delirio.com.co/"
+    },
+    {
+      "id": "business-armenia-1",
+      "name": "Cafe Quindio",
+      "municipality": "Armenia",
+      "category": "promotions",
+      "contact": "Contacto en sitio oficial",
+      "description": "Marca de cafe con tiendas listadas oficialmente en Armenia.",
+      "address": "Consulta las tiendas en el sitio oficial",
+      "latitude": 4.5339,
+      "longitude": -75.6811,
+      "sourceUrl": "https://www.cafequindio.com.co/pages/tiendas-cafe-quindio"
+    },
+    {
+      "id": "business-quibdo-1",
+      "name": "Quibdo Emprende",
+      "municipality": "Quibdo",
+      "category": "reopening",
+      "contact": "Contacto en sitio oficial",
+      "description": "Plataforma de emprendimientos locales de Quibdo.",
+      "address": "Cra. 2 # 24A-32, segun ficha publica; confirmar con el negocio",
+      "latitude": 5.692,
+      "longitude": -76.658,
+      "sourceUrl": "https://quibdoemprende.org/"
+    }
+  ],
+  "scopeNote": "Los nombres de negocios y eventos tienen fuentes publicas incluidas en cada registro. Las coordenadas de negocios y eventos son aproximadas a nivel de municipio cuando la fuente no publica una direccion exacta. Los reportes sismicos del mapa son una representacion historica para demostracion y no reemplazan reportes oficiales en tiempo real.",
+  "affectedCities": [
+    {
+      "municipality": "El Calvario",
+      "department": "Meta",
+      "latitude": 4.352,
+      "longitude": -73.711,
+      "impactLevel": "high",
+      "reportedEffects": ["danos en viviendas", "grietas", "evacuaciones"],
+      "evidenceLevel": "official-report"
+    },
+    {
+      "municipality": "San Juanito",
+      "department": "Meta",
+      "latitude": 4.460,
+      "longitude": -73.680,
+      "impactLevel": "high",
+      "reportedEffects": ["danos en viviendas", "afectaciones en infraestructura"],
+      "evidenceLevel": "official-report"
+    },
+    {
+      "municipality": "Villavicencio",
+      "department": "Meta",
+      "latitude": 4.142,
+      "longitude": -73.626,
+      "impactLevel": "medium",
+      "reportedEffects": ["evacuaciones preventivas", "grietas en edificaciones"],
+      "evidenceLevel": "reported"
+    },
+    {
+      "municipality": "Restrepo",
+      "department": "Meta",
+      "latitude": 4.259,
+      "longitude": -73.562,
+      "impactLevel": "medium",
+      "reportedEffects": ["afectaciones en viviendas", "replica cercana"],
+      "evidenceLevel": "official-report"
+    },
+    {
+      "municipality": "Acacias",
+      "department": "Meta",
+      "latitude": 3.987,
+      "longitude": -73.765,
+      "impactLevel": "low",
+      "reportedEffects": ["evacuaciones preventivas", "revision de edificaciones"],
+      "evidenceLevel": "reported"
+    },
+    {
+      "municipality": "Guayabetal",
+      "department": "Cundinamarca",
+      "latitude": 4.214,
+      "longitude": -73.817,
+      "impactLevel": "high",
+      "reportedEffects": ["deslizamientos", "cierre vial"],
+      "evidenceLevel": "official-report"
+    },
+    {
+      "municipality": "Quetame",
+      "department": "Cundinamarca",
+      "latitude": 4.333,
+      "longitude": -73.861,
+      "impactLevel": "high",
+      "reportedEffects": ["deslizamientos", "afectaciones en viviendas", "cierre vial"],
+      "evidenceLevel": "official-report"
+    },
+    {
+      "municipality": "Soacha",
+      "department": "Cundinamarca",
+      "latitude": 4.582,
+      "longitude": -74.214,
+      "impactLevel": "low",
+      "reportedEffects": ["evacuaciones preventivas", "revision de edificaciones"],
+      "evidenceLevel": "reported"
+    },
+    {
+      "municipality": "Bogota",
+      "department": "Bogota D.C.",
+      "latitude": 4.711,
+      "longitude": -74.072,
+      "impactLevel": "medium",
+      "reportedEffects": ["evacuaciones", "grietas en edificaciones", "afectaciones menores"],
+      "evidenceLevel": "official-report"
+    }
+  ],
+  "sources": [
+    {
+      "id": "sgc-main",
+      "publisher": "Servicio Geologico Colombiano",
+      "title": "Comunicado sismo del 17 de agosto de 2023",
+      "url": "https://www2.sgc.gov.co/Noticias/Paginas/Comunicado-sismo-17-de-agosto-2023.aspx"
+    },
+    {
+      "id": "sgc-replicas",
+      "publisher": "Servicio Geologico Colombiano",
+      "title": "Reporte de replicas del sismo del 17 de agosto",
+      "url": "https://www2.sgc.gov.co/Noticias/Paginas/Reporte-de-replicas-del-sismo-ocurrido-el-17-de-agosto.aspx"
+    },
+    {
+      "id": "ungrd",
+      "publisher": "UNGRD",
+      "title": "Reporte de los sismos que afectaron al pais",
+      "url": "http://portal.gestiondelriesgo.gov.co/Paginas/Noticias/2023/UNGRD-entrega-reporte-de-los-mas-recientes-sismos-que-afectaron-al-pais.aspx"
+    },
+    {
+      "id": "usgs-catalog",
+      "publisher": "USGS",
+      "title": "Consulta del catalogo sismologico para Colombia",
+      "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2023-08-17T00:00:00&endtime=2023-08-18T00:00:00&minlatitude=-5&maxlatitude=14&minlongitude=-80&maxlongitude=-66&minmagnitude=5"
+    },
+    {
+      "id": "sgc-quetame-2008",
+      "publisher": "Servicio Geologico Colombiano",
+      "title": "Informacion detallada del sismo de Quetame de 2008",
+      "url": "https://sish.sgc.gov.co/visor/sesionServlet?metodo=irAInfoDetallada&idSismo=49"
+    },
+    {
+      "id": "sgc-bogota-1917",
+      "publisher": "Servicio Geologico Colombiano",
+      "title": "100 anos del ultimo gran terremoto en Bogota",
+      "url": "https://www2.sgc.gov.co/Noticias/Paginas/31-DE-AGOSTO%2C-100-A%C3%91OS-DEL-%C3%9ALTIMO-GRAN-TERREMOTO-EN-BOGOT%C3%81.aspx"
+    },
+    {
+      "id": "usgs-1917",
+      "publisher": "USGS",
+      "title": "Evento sismico historico de 1917",
+      "url": "https://earthquake.usgs.gov/earthquakes/eventpage/iscgem913647"
+    },
+    {
+      "id": "sgc-choachi-1966",
+      "publisher": "Servicio Geologico Colombiano",
+      "title": "Informacion detallada del sismo de Choachi de 1966",
+      "url": "https://sish.sgc.gov.co/visor/sesionServlet?metodo=irAInfoDetallada&idSismo=42"
+    },
+    {
+      "id": "rtvc-1967",
+      "publisher": "Señal Memoria RTVC",
+      "title": "Sismo de Bogota de febrero de 1967",
+      "url": "https://www.senalmemoria.co/sismo-bogota-febrero-1967"
+    }
+  ]
+}

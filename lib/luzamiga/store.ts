@@ -1,4 +1,52 @@
-import type { MapItem } from "./types"
+import type { HelpCategory, MapItem } from "./types"
+import rawEarthquakeData from "@/data/terremoto-17-agosto-2023.json"
+
+type DatasetCity = {
+  municipality: string
+  latitude: number
+  longitude: number
+  reportedEffects: string[]
+}
+
+type HistoricalEvent = {
+  id: string
+  date: string
+  title: string
+  affectedCities: DatasetCity[]
+}
+
+type CulturalEvent = {
+  id: string
+  title: string
+  municipality: string
+  venue: string
+  date: string
+  organizer: string
+  description: string
+  latitude: number
+  longitude: number
+  sourceUrl: string
+}
+
+type Business = {
+  id: string
+  name: string
+  municipality: string
+  category: string
+  contact: string
+  description: string
+  address: string
+  latitude: number
+  longitude: number
+  sourceUrl: string
+}
+
+const earthquakeData = rawEarthquakeData as unknown as {
+  culturalEvents: CulturalEvent[]
+  businesses: Business[]
+  affectedCities: DatasetCity[]
+  historicalEvents: HistoricalEvent[]
+}
 
 /**
  * Store en memoria (singleton por proceso). No apto para producción:
@@ -8,15 +56,46 @@ import type { MapItem } from "./types"
 interface LuzAmigaStore {
   items: MapItem[]
   updatedAt: number
+  seedVersion?: number
 }
 
 const g = globalThis as unknown as { __luzAmigaStore?: LuzAmigaStore }
+const SEED_VERSION = 8
+const ALLOWED_CITIES = new Set(["armenia", "cali", "manizales", "pereira", "quibdo"])
+const LEGACY_SEED_IDS = new Set([
+  "help-1",
+  "help-2",
+  "help-3",
+  "help-4",
+  "help-5",
+  "help-6",
+  "event-1",
+  "event-2",
+  "event-3",
+  "cultural-villavicencio-1",
+  "cultural-quetame-1",
+  "cultural-guayabetal-1",
+  "cultural-san-juanito-1",
+  "cultural-bogota-1",
+  "cultural-soacha-1",
+  "business-villavicencio-1",
+  "business-quetame-1",
+  "business-guayabetal-1",
+  "business-san-juanito-1",
+  "business-bogota-1",
+  "business-soacha-1",
+])
+
+function normalizeCity(value: string) {
+  return value.toLocaleLowerCase("es").normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+}
 
 function seed(): MapItem[] {
   const now = Date.now()
   const at = (minsAgo: number) => new Date(now - minsAgo * 60_000).toISOString()
+  const reportTypes = ["landslideRisk", "blockedRoad", "safeZone"] as const
 
-  return [
+  const items: MapItem[] = [
     // ---- Reactivando el comercio (help) ----
     {
       id: "help-1",
@@ -146,50 +225,84 @@ function seed(): MapItem[] {
       createdAt: at(160),
       status: "active",
     },
+    ...earthquakeData.culturalEvents.map((event) => ({
+      id: event.id,
+      kind: "event" as const,
+      category: "events" as const,
+      title: event.title,
+      description: event.description,
+      author: event.organizer,
+      contact: `${event.venue} · ${event.date}`,
+      city: event.municipality,
+      lat: event.latitude,
+      lng: event.longitude,
+      createdAt: event.date,
+      status: "active" as const,
+    })),
+    ...earthquakeData.businesses.map((business) => ({
+      id: business.id,
+      kind: "help" as const,
+      category: business.category as HelpCategory,
+      title: business.name,
+      description: business.description,
+      author: business.name,
+      contact: business.contact,
+      city: business.municipality,
+      address: business.address,
+      lat: business.latitude,
+      lng: business.longitude,
+      createdAt: "2026-08-28T09:00:00.000Z",
+      status: "active" as const,
+    })),
 
-    // ---- Reportes ciudadanos (userReport) ----
-    {
-      id: "report-1",
-      kind: "userReport",
-      reportType: "safeZone",
-      title: "Zona segura: coliseo municipal",
-      description: "Espacio amplio y estable habilitado como punto de encuentro seguro.",
-      city: "Pereira",
-      lat: 4.8156,
-      lng: -75.6944,
-      createdAt: at(45),
-      status: "active",
-    },
-    {
-      id: "report-2",
-      kind: "userReport",
-      reportType: "blockedRoad",
-      title: "Vía bloqueada por escombros",
-      description: "Paso cerrado por caída de material. Buscar ruta alterna.",
-      city: "Manizales",
-      lat: 5.055,
-      lng: -75.52,
-      createdAt: at(30),
-      status: "active",
-    },
-    {
-      id: "report-3",
-      kind: "userReport",
-      reportType: "landslideRisk",
-      title: "Riesgo de derrumbe en ladera",
-      description: "Grietas visibles en el terreno. Evitar la zona y reportar a autoridades.",
-      city: "Medellín",
-      lat: 6.2518,
-      lng: -75.5636,
-      createdAt: at(15),
-      status: "active",
-    },
+    // ---- Reportes ciudadanos basados en el dataset historico de demo ----
+    ...earthquakeData.affectedCities.map((city, index) => ({
+      id: `report-earthquake-${index + 1}`,
+      kind: "userReport" as const,
+      reportType: reportTypes[index % reportTypes.length],
+      title: `Afectacion reportada en ${city.municipality}`,
+      description: `${city.reportedEffects.join(", ")}. Datos de demostracion basados en reportes del sismo del 17 de agosto de 2023.`,
+      city: city.municipality,
+      lat: city.latitude,
+      lng: city.longitude,
+      createdAt: at(15 + index * 12),
+      status: "active" as const,
+    })),
+    ...earthquakeData.historicalEvents.flatMap((event) =>
+      event.affectedCities.map((city, index) => ({
+        id: `report-${event.id}-${index + 1}`,
+        kind: "userReport" as const,
+        reportType: reportTypes[index % reportTypes.length],
+        title: `${event.title}: afectacion reportada en ${city.municipality}`,
+        description: `${city.reportedEffects.join(", ")}. Registro historico usado como dato de demostracion.`,
+        city: city.municipality,
+        lat: city.latitude,
+        lng: city.longitude,
+        createdAt: event.date,
+        status: "resolved" as const,
+      })),
+    ),
   ]
+
+  return items.filter(
+    (item) =>
+      item.kind === "userReport" ||
+      (ALLOWED_CITIES.has(normalizeCity(item.city ?? "")) &&
+        !["help-1", "help-2", "help-3", "help-4", "help-5", "help-6", "event-1", "event-2", "event-3"].includes(item.id)),
+  )
 }
 
 function getStore(): LuzAmigaStore {
   if (!g.__luzAmigaStore) {
-    g.__luzAmigaStore = { items: seed(), updatedAt: Date.now() }
+    g.__luzAmigaStore = { items: seed(), updatedAt: Date.now(), seedVersion: SEED_VERSION }
+  } else if (g.__luzAmigaStore.seedVersion !== SEED_VERSION) {
+    const store = g.__luzAmigaStore
+    const currentSeed = seed()
+    const seedIds = new Set(currentSeed.map((item) => item.id))
+    store.items = store.items.filter((item) => !LEGACY_SEED_IDS.has(item.id) && !seedIds.has(item.id))
+    store.items.push(...currentSeed)
+    store.seedVersion = SEED_VERSION
+    store.updatedAt = Date.now()
   }
   return g.__luzAmigaStore
 }
