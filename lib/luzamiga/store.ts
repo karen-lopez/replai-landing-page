@@ -1,4 +1,4 @@
-import type { MapItem } from "./types"
+import type { HelpCategory, MapItem } from "./types"
 import earthquakeData from "@/data/terremoto-17-agosto-2023.json"
 
 /**
@@ -13,7 +13,7 @@ interface LuzAmigaStore {
 }
 
 const g = globalThis as unknown as { __luzAmigaStore?: LuzAmigaStore }
-const SEED_VERSION = 2
+const SEED_VERSION = 5
 
 function seed(): MapItem[] {
   const now = Date.now()
@@ -150,6 +150,35 @@ function seed(): MapItem[] {
       createdAt: at(160),
       status: "active",
     },
+    ...earthquakeData.culturalEvents.map((event) => ({
+      id: event.id,
+      kind: "event" as const,
+      category: "events" as const,
+      title: event.title,
+      description: `${event.description} Evento cultural sintetico para demostracion.`,
+      author: event.organizer,
+      contact: `${event.venue} · ${event.date}`,
+      city: event.municipality,
+      lat: event.latitude,
+      lng: event.longitude,
+      createdAt: event.date,
+      status: "active" as const,
+    })),
+    ...earthquakeData.businesses.map((business) => ({
+      id: business.id,
+      kind: "help" as const,
+      category: business.category as HelpCategory,
+      title: business.name,
+      description: `${business.description} Negocio sintetico para demostracion.`,
+      author: business.name,
+      contact: business.contact,
+      city: business.municipality,
+      address: business.address,
+      lat: business.latitude,
+      lng: business.longitude,
+      createdAt: "2026-08-28T09:00:00.000Z",
+      status: "active" as const,
+    })),
 
     // ---- Reportes ciudadanos basados en el dataset historico de demo ----
     ...earthquakeData.affectedCities.map((city, index) => ({
@@ -164,6 +193,20 @@ function seed(): MapItem[] {
       createdAt: at(15 + index * 12),
       status: "active" as const,
     })),
+    ...earthquakeData.historicalEvents.flatMap((event) =>
+      event.affectedCities.map((city, index) => ({
+        id: `report-${event.id}-${index + 1}`,
+        kind: "userReport" as const,
+        reportType: reportTypes[index % reportTypes.length],
+        title: `${event.title}: afectacion reportada en ${city.municipality}`,
+        description: `${city.reportedEffects.join(", ")}. Registro historico usado como dato de demostracion.`,
+        city: city.municipality,
+        lat: city.latitude,
+        lng: city.longitude,
+        createdAt: event.date,
+        status: "resolved" as const,
+      })),
+    ),
   ]
 }
 
