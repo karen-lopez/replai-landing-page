@@ -23,7 +23,7 @@ export function LuzAmigaCommerce() {
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [publishOpen, setPublishOpen] = useState(false)
   const [verifyOpen, setVerifyOpen] = useState(false)
-  const { items } = useItems()
+  const { items, refresh } = useItems()
 
   const listings = items.filter((item) => item.kind === "help" || item.kind === "event")
   const normalizedMunicipality = municipality.trim().toLocaleLowerCase("es").normalize("NFD").replace(/[̀-ͯ]/g, "")
@@ -258,7 +258,7 @@ export function LuzAmigaCommerce() {
         onOpenChange={setVerifyOpen}
         onVerified={() => setPublishOpen(true)}
       />
-      <PublishListingDialog open={publishOpen} onOpenChange={setPublishOpen} />
+      <PublishListingDialog open={publishOpen} onOpenChange={setPublishOpen} onPublished={refresh} />
     </section>
   )
 }

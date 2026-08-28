@@ -125,9 +125,11 @@ async function searchBusinesses(query: string): Promise<BusinessSearchResult[]> 
 interface PublishListingDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
+  /** Se dispara justo después de publicar con éxito (no en modo offline). */
+  onPublished?: () => void
 }
 
-export function PublishListingDialog({ open, onOpenChange }: PublishListingDialogProps) {
+export function PublishListingDialog({ open, onOpenChange, onPublished }: PublishListingDialogProps) {
   const { t } = useT()
   const [selected, setSelected] = useState<CategoryId>("reopening")
   const [submitted, setSubmitted] = useState(false)
@@ -271,26 +273,33 @@ export function PublishListingDialog({ open, onOpenChange }: PublishListingDialo
       lng: resolved.lng,
     }
 
+    let res: Response
     try {
-      const res = await fetch("/api/luzamiga/items", {
+      res = await fetch("/api/luzamiga/items", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       })
-      if (res.status === 401) {
-        setError(t("offer.needAccountBody"))
-        setSending(false)
-        return
-      }
-      if (!res.ok) throw new Error("bad response")
-      setSubmitted(true)
     } catch {
+      // Sin conexión de verdad (el fetch ni se completó): encolar para
+      // sincronizar al reconectar.
       await enqueueItem(payload)
       setQueued(true)
       setSubmitted(true)
-    } finally {
       setSending(false)
+      return
     }
+
+    if (res.status === 401) {
+      setError(t("offer.needAccountBody"))
+    } else if (!res.ok) {
+      const data = await res.json().catch(() => null)
+      setError(data?.error ?? "No pudimos publicar tu negocio. Inténtalo de nuevo.")
+    } else {
+      setSubmitted(true)
+      onPublished?.()
+    }
+    setSending(false)
   }
 
   return (

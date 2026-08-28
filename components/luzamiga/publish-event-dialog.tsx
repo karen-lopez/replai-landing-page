@@ -82,9 +82,11 @@ async function searchPlaces(query: string): Promise<PlaceSearchResult[]> {
 interface PublishEventDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
+  /** Se dispara justo después de publicar con éxito (no en modo offline). */
+  onPublished?: () => void
 }
 
-export function PublishEventDialog({ open, onOpenChange }: PublishEventDialogProps) {
+export function PublishEventDialog({ open, onOpenChange, onPublished }: PublishEventDialogProps) {
   const { t } = useT()
   const [submitted, setSubmitted] = useState(false)
   const [sending, setSending] = useState(false)
@@ -191,26 +193,33 @@ export function PublishEventDialog({ open, onOpenChange }: PublishEventDialogPro
       lng: resolved.lng,
     }
 
+    let res: Response
     try {
-      const res = await fetch("/api/luzamiga/items", {
+      res = await fetch("/api/luzamiga/items", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       })
-      if (res.status === 401) {
-        setError(t("offer.needAccountBody"))
-        setSending(false)
-        return
-      }
-      if (!res.ok) throw new Error("bad response")
-      setSubmitted(true)
     } catch {
+      // Sin conexión de verdad (el fetch ni se completó): encolar para
+      // sincronizar al reconectar.
       await enqueueItem(payload)
       setQueued(true)
       setSubmitted(true)
-    } finally {
       setSending(false)
+      return
     }
+
+    if (res.status === 401) {
+      setError(t("offer.needAccountBody"))
+    } else if (!res.ok) {
+      const data = await res.json().catch(() => null)
+      setError(data?.error ?? "No pudimos publicar tu evento. Inténtalo de nuevo.")
+    } else {
+      setSubmitted(true)
+      onPublished?.()
+    }
+    setSending(false)
   }
 
   return (

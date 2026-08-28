@@ -9,7 +9,7 @@ import { PublishEventDialog } from "./publish-event-dialog"
 
 export function LuzAmigaEvents() {
   const { user, openRegister } = useAuth()
-  const { items } = useItems()
+  const { items, refresh } = useItems()
   const [publishOpen, setPublishOpen] = useState(false)
   const [expandedId, setExpandedId] = useState<string | null>(null)
 
@@ -157,7 +157,7 @@ export function LuzAmigaEvents() {
         )}
       </div>
 
-      <PublishEventDialog open={publishOpen} onOpenChange={setPublishOpen} />
+      <PublishEventDialog open={publishOpen} onOpenChange={setPublishOpen} onPublished={refresh} />
     </section>
   )
 }
