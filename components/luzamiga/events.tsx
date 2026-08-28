@@ -1,169 +1,150 @@
 "use client"
 
 import { useState } from "react"
-import { Calendar, ChevronLeft, ChevronRight, Clock, MapPin } from "lucide-react"
-import type { MapItem } from "@/lib/luzamiga/types"
+import { Button } from "@/components/ui/button"
+import { Calendar, CalendarHeart, Map, MapPin, Sparkles, UserPlus } from "lucide-react"
 import { useItems } from "./map/use-items"
-
-interface CommunityEvent {
-  id: string
-  title: string
-  type: string
-  date: string
-  time: string
-  location: string
-  description: string
-}
-
-function itemToEvent(item: MapItem): CommunityEvent {
-  return {
-    id: item.id,
-    title: item.title,
-    type: "Comunidad",
-    date: "Publicado recientemente",
-    time: "Disponible ahora",
-    location: item.address ?? item.city ?? "Ubicación reconocida",
-    description: item.description,
-  }
-}
-
-const EVENTS_PAGE_SIZE = 4
-
-// Sample events. Can later be replaced by community-posted data from a database.
-const EVENTS: CommunityEvent[] = [
-  {
-    id: "1",
-    title: "Feria de emprendedores locales",
-    type: "Feria",
-    date: "Sábado 6 de septiembre",
-    time: "10:00 a. m.",
-    location: "Parque Sucre, Armenia",
-    description:
-      "Negocios del barrio se reúnen para dar a conocer sus productos y reactivar las ventas. Entrada libre.",
-  },
-  {
-    id: "2",
-    title: "Mercado nocturno de comidas",
-    type: "Gastronomía",
-    date: "Domingo 7 de septiembre",
-    time: "6:00 p. m.",
-    location: "Plaza principal, Manizales",
-    description:
-      "Los restaurantes locales se reúnen para una noche de sabores, música en vivo y comunidad.",
-  },
-  {
-    id: "3",
-    title: "Bazar artesanal por la reactivación",
-    type: "Bazar",
-    date: "Lunes 8 de septiembre",
-    time: "9:00 a. m.",
-    location: "Parque del Café, Armenia",
-    description:
-      "Artesanas y artesanos muestran su trabajo para reactivar la economía del sector.",
-  },
-  {
-    id: "4",
-    title: "Ruta de compras del comercio local",
-    type: "Comercio",
-    date: "Miércoles 10 de septiembre",
-    time: "todo el día",
-    location: "Centro comercial del barrio, Pereira",
-    description:
-      "Un recorrido por los negocios que reabrieron, con descuentos y sorpresas para la comunidad.",
-  },
-]
+import { useAuth } from "./auth/auth-provider"
+import { PublishEventDialog } from "./publish-event-dialog"
 
 export function LuzAmigaEvents() {
-  const [page, setPage] = useState(1)
+  const { user, openRegister } = useAuth()
   const { items } = useItems()
-  const publishedEvents = items
-    .filter((item) => item.kind === "event" || (item.kind === "help" && item.category === "events"))
-    .map(itemToEvent)
-  const visibleEvents = [...publishedEvents, ...EVENTS]
-  const pageCount = Math.max(1, Math.ceil(visibleEvents.length / EVENTS_PAGE_SIZE))
-  const currentPage = Math.min(page, pageCount)
-  const paginatedEvents = visibleEvents.slice((currentPage - 1) * EVENTS_PAGE_SIZE, currentPage * EVENTS_PAGE_SIZE)
+  const [publishOpen, setPublishOpen] = useState(false)
+  const [expandedId, setExpandedId] = useState<string | null>(null)
+
+  const events = items.filter((item) => item.kind === "event")
+
+  function handlePublishClick() {
+    if (!user) {
+      openRegister()
+      return
+    }
+    setPublishOpen(true)
+  }
 
   return (
-    <section id="eventos" className="py-16 md:py-24" style={{ backgroundColor: "#FFFFFF" }}>
+    <section id="eventos" className="py-16 md:py-24" style={{ backgroundColor: "#FDFAF3" }}>
       <div className="container mx-auto max-w-5xl px-4">
-        <div className="mb-10 max-w-2xl">
-          <h2 className="text-3xl font-bold tracking-tight text-balance md:text-4xl" style={{ color: "#3D3020" }}>
-            Eventos para reactivar el comercio
-          </h2>
-          <p className="mt-3 text-lg leading-relaxed" style={{ color: "#6B5B45" }}>
-            Ferias, mercados y actividades organizadas por la comunidad para volver a mover la economía local.
-          </p>
-        </div>
+        <div className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+          <div className="max-w-2xl">
+            <h2 className="text-3xl font-bold tracking-tight text-balance md:text-4xl" style={{ color: "#3D3020" }}>
+              Eventos culturales
+            </h2>
+            <p className="mt-3 text-lg leading-relaxed" style={{ color: "#6B5B45" }}>
+              Ferias, conciertos, talleres y encuentros comunitarios organizados por la comunidad para reactivar la
+              vida cultural del barrio.
+            </p>
+          </div>
 
-        <div className="grid gap-5 sm:grid-cols-2">
-          {paginatedEvents.map((event) => (
-            <article
-              key={event.id}
-              className="flex flex-col gap-4 rounded-2xl border p-6"
-              style={{ borderColor: "#EEE1C9", backgroundColor: "#FFFFFF" }}
+          <div
+            className="flex shrink-0 flex-col items-start gap-3 rounded-2xl border border-dashed p-4 sm:flex-row sm:items-center"
+            style={{ borderColor: "#E4C79A", backgroundColor: "#FFFDF8" }}
+          >
+            <span
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
+              style={{ backgroundColor: "#FBEBD1", color: "#C77F16" }}
             >
-              <span
-                className="w-fit rounded-full px-3 py-1 text-xs font-semibold"
-                style={{ backgroundColor: "#E3EAF8", color: "#3F6BB0" }}
-              >
-                {event.type}
-              </span>
-
-              <h3 className="text-xl font-semibold leading-snug text-balance" style={{ color: "#3D3020" }}>
-                {event.title}
-              </h3>
-
-              <p className="text-sm leading-relaxed" style={{ color: "#6B5B45" }}>
-                {event.description}
-              </p>
-
-              <div className="mt-auto space-y-2 border-t pt-4 text-sm" style={{ borderColor: "#F1E4CC", color: "#8A7659" }}>
-                <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4" aria-hidden="true" />
-                  {event.date}
-                </div>
-                <div className="flex items-center gap-2">
-                  <Clock className="h-4 w-4" aria-hidden="true" />
-                  {event.time}
-                </div>
-                <div className="flex items-center gap-2">
-                  <MapPin className="h-4 w-4" aria-hidden="true" />
-                  {event.location}
-                </div>
-              </div>
-            </article>
-          ))}
-        </div>
-
-        {pageCount > 1 ? (
-          <nav className="mt-8 flex items-center justify-center gap-4" aria-label="Paginación de eventos">
-            <button
-              type="button"
-              onClick={() => setPage((value) => Math.max(1, value - 1))}
-              disabled={currentPage === 1}
-              aria-label="Página anterior de eventos"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full border transition-colors disabled:cursor-not-allowed disabled:opacity-40"
-              style={{ borderColor: "#E4C79A", color: "#3F6BB0" }}
-            >
-              <ChevronLeft className="h-5 w-5" aria-hidden="true" />
-            </button>
-            <span className="text-sm font-medium" style={{ color: "#6B5B45" }} aria-live="polite">
-              Página {currentPage} de {pageCount}
+              {user ? <Sparkles className="h-5 w-5" aria-hidden="true" /> : <UserPlus className="h-5 w-5" aria-hidden="true" />}
             </span>
-            <button
+            <div className="max-w-xs text-sm leading-relaxed" style={{ color: "#6B5B45" }}>
+              {user
+                ? "¿Organizas algo para la comunidad? Compártelo aquí."
+                : "Para publicar un evento cultural necesitas una cuenta. Es rápido y gratuito."}
+            </div>
+            <Button
               type="button"
-              onClick={() => setPage((value) => Math.min(pageCount, value + 1))}
-              disabled={currentPage === pageCount}
-              aria-label="Página siguiente de eventos"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full border transition-colors disabled:cursor-not-allowed disabled:opacity-40"
-              style={{ borderColor: "#E4C79A", color: "#3F6BB0" }}
+              onClick={handlePublishClick}
+              className="w-full shrink-0 rounded-full px-6 text-sm font-semibold text-white sm:w-auto"
+              style={{ backgroundColor: "#C77F16" }}
             >
-              <ChevronRight className="h-5 w-5" aria-hidden="true" />
-            </button>
-          </nav>
-        ) : null}
+              {user ? "Publicar evento cultural" : "Registrarse"}
+            </Button>
+          </div>
+        </div>
+
+        {events.length === 0 ? (
+          <div
+            className="rounded-2xl border border-dashed p-8 text-center"
+            style={{ borderColor: "#E4C79A", backgroundColor: "#FFFDF8" }}
+          >
+            <p style={{ color: "#6B5B45" }}>
+              Todavía no hay eventos publicados. ¡Sé la primera persona en compartir uno!
+            </p>
+          </div>
+        ) : (
+          <div className="grid gap-5 sm:grid-cols-2">
+            {events.map((event) => {
+              const isExpanded = expandedId === event.id
+              return (
+                <article
+                  key={event.id}
+                  className="flex flex-col gap-4 rounded-2xl border p-6"
+                  style={{ borderColor: "#EEE1C9", backgroundColor: "#FFFFFF" }}
+                >
+                  <span
+                    className="inline-flex w-fit items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold"
+                    style={{ backgroundColor: "#F1E4CC", color: "#8A6D3B" }}
+                  >
+                    <CalendarHeart className="h-3.5 w-3.5" aria-hidden="true" />
+                    Evento cultural
+                  </span>
+
+                  <h3 className="text-xl font-semibold leading-snug text-balance" style={{ color: "#3D3020" }}>
+                    {event.title}
+                  </h3>
+                  {event.author ? (
+                    <p className="text-sm font-medium" style={{ color: "#8A6D3B" }}>
+                      {event.author}
+                    </p>
+                  ) : null}
+
+                  <p className="text-sm leading-relaxed" style={{ color: "#6B5B45" }}>
+                    {event.description}
+                  </p>
+
+                  <div className="mt-auto space-y-2 border-t pt-4 text-sm" style={{ borderColor: "#F1E4CC", color: "#8A7659" }}>
+                    {event.contact ? (
+                      <div className="flex items-center gap-2">
+                        <Calendar className="h-4 w-4" aria-hidden="true" />
+                        {event.contact}
+                      </div>
+                    ) : null}
+                    <div className="flex items-center gap-2">
+                      <MapPin className="h-4 w-4" aria-hidden="true" />
+                      {event.address ?? event.city ?? "Ubicación reconocida"}
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => setExpandedId((id) => (id === event.id ? null : event.id))}
+                    aria-expanded={isExpanded}
+                    className="inline-flex w-fit items-center gap-1.5 text-sm font-semibold text-[#4A7C59] underline-offset-4 hover:underline"
+                  >
+                    <Map className="h-4 w-4" aria-hidden="true" />
+                    {isExpanded ? "Ocultar mapa" : "Ver mapa"}
+                  </button>
+                  {isExpanded ? (
+                    <div className="overflow-hidden rounded-xl border" style={{ borderColor: "#EAD9B8" }}>
+                      <iframe
+                        title={`Mapa de Google de ${event.title}`}
+                        src={`https://www.google.com/maps?q=${event.lat},${event.lng}&z=16&output=embed`}
+                        className="h-56 w-full"
+                        style={{ border: 0 }}
+                        loading="lazy"
+                        referrerPolicy="no-referrer-when-downgrade"
+                      />
+                    </div>
+                  ) : null}
+                </article>
+              )
+            })}
+          </div>
+        )}
       </div>
+
+      <PublishEventDialog open={publishOpen} onOpenChange={setPublishOpen} />
     </section>
   )
 }

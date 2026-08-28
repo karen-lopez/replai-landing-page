@@ -25,7 +25,8 @@ interface AuthContextValue {
   }) => Promise<{ ok: boolean; error?: string }>
   logout: () => Promise<void>
   dialog: DialogView
-  openLogin: () => void
+  loginReason: string | null
+  openLogin: (reason?: string) => void
   openRegister: () => void
   closeDialog: () => void
 }
@@ -36,6 +37,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null)
   const [loading, setLoading] = useState(true)
   const [dialog, setDialog] = useState<DialogView>(null)
+  const [loginReason, setLoginReason] = useState<string | null>(null)
 
   useEffect(() => {
     let active = true
@@ -63,6 +65,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!res.ok) return { ok: false, error: data.error as string }
     setUser(data.user)
     setDialog(null)
+    setLoginReason(null)
     return { ok: true }
   }, [])
 
@@ -95,11 +98,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       register,
       logout,
       dialog,
-      openLogin: () => setDialog("login"),
-      openRegister: () => setDialog("register"),
-      closeDialog: () => setDialog(null),
+      loginReason,
+      openLogin: (reason) => {
+        setLoginReason(reason ?? null)
+        setDialog("login")
+      },
+      openRegister: () => {
+        setLoginReason(null)
+        setDialog("register")
+      },
+      closeDialog: () => {
+        setLoginReason(null)
+        setDialog(null)
+      },
     }),
-    [user, loading, login, register, logout, dialog],
+    [user, loading, login, register, logout, dialog, loginReason],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

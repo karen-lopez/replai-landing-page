@@ -12,7 +12,7 @@ export function LuzAmigaFooter() {
           <Sun className="h-6 w-6" aria-hidden="true" />
         </div>
         <p className="mx-auto max-w-2xl text-base leading-relaxed text-pretty" style={{ color: "#5C4A32" }}>
-          Luz Amiga es una iniciativa de Replai para todas las comunidades afectadas por el terremoto en Colombia.
+          Luz Amiga es una iniciativa para todas las comunidades afectadas por el terremoto en Colombia.
         </p>
         <Link
           href="/"

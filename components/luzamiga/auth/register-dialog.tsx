@@ -130,7 +130,7 @@ export function RegisterDialog() {
             {t("register.haveAccount")}{" "}
             <button
               type="button"
-              onClick={openLogin}
+              onClick={() => openLogin()}
               className="font-semibold underline"
               style={{ color: "#C77F16" }}
             >

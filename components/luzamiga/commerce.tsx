@@ -1,25 +1,28 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { Button } from "@/components/ui/button"
 import { CATEGORIES, CATEGORY_MAP, type CategoryId } from "./categories"
-import { ChevronLeft, ChevronRight, ExternalLink, Map, MapPin, Phone, Search, X } from "lucide-react"
-import type { MapItem } from "@/lib/luzamiga/types"
+import { ChevronLeft, ChevronRight, Map, MapPin, Phone, Store, UserPlus } from "lucide-react"
 import { useItems } from "./map/use-items"
-import dynamic from "next/dynamic"
-
-const MiniLocationMap = dynamic(() => import("./map/mini-location-map").then((module) => module.MiniLocationMap), {
-  ssr: false,
-})
+import { useAuth } from "./auth/auth-provider"
+import { useT } from "./i18n/language-provider"
+import { MunicipalityAutocomplete } from "./municipality-autocomplete"
+import { PublishListingDialog } from "./publish-listing-dialog"
 
 const PAGE_SIZE = 3
 const MUNICIPALITIES_URL = "https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json"
 const FALLBACK_MUNICIPALITIES = ["Bogotá", "Manizales", "Medellín", "Pereira", "Cali", "Armenia"]
 
-export function LuzAmigaFindHelp() {
+export function LuzAmigaCommerce() {
+  const { user, openRegister } = useAuth()
+  const { t } = useT()
   const [filter, setFilter] = useState<CategoryId | "all">("all")
   const [page, setPage] = useState(1)
   const [municipality, setMunicipality] = useState("")
   const [municipalities, setMunicipalities] = useState(FALLBACK_MUNICIPALITIES)
+  const [expandedId, setExpandedId] = useState<string | null>(null)
+  const [publishOpen, setPublishOpen] = useState(false)
   const { items } = useItems()
 
   useEffect(() => {
@@ -39,10 +42,10 @@ export function LuzAmigaFindHelp() {
   }, [])
 
   const listings = items.filter((item) => item.kind === "help" || item.kind === "event")
-  const normalizedMunicipality = municipality.trim().toLocaleLowerCase("es").normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+  const normalizedMunicipality = municipality.trim().toLocaleLowerCase("es").normalize("NFD").replace(/[̀-ͯ]/g, "")
   const filtered = listings.filter((item) => {
     const matchesCategory = filter === "all" || item.category === filter
-    const searchableLocation = `${item.city ?? ""} ${item.address ?? ""}`.toLocaleLowerCase("es").normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    const searchableLocation = `${item.city ?? ""} ${item.address ?? ""}`.toLocaleLowerCase("es").normalize("NFD").replace(/[̀-ͯ]/g, "")
     return matchesCategory && (!normalizedMunicipality || searchableLocation.includes(normalizedMunicipality))
   })
   const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
@@ -59,17 +62,50 @@ export function LuzAmigaFindHelp() {
     setPage(1)
   }
 
+  function handlePublishClick() {
+    if (!user) {
+      openRegister()
+      return
+    }
+    setPublishOpen(true)
+  }
+
   return (
-    <section id="encontrar-ayuda" className="py-16 md:py-24" style={{ backgroundColor: "#FBF1E1" }}>
+    <section id="comercio" className="py-16 md:py-24" style={{ backgroundColor: "#FBF1E1" }}>
       <div className="container mx-auto max-w-6xl px-4">
-        <div className="mb-10 max-w-2xl">
-          <h2 className="text-3xl font-bold tracking-tight text-balance md:text-4xl" style={{ color: "#3D3020" }}>
-            Explora el comercio
-          </h2>
-          <p className="mt-3 text-lg leading-relaxed" style={{ color: "#6B5B45" }}>
-            Descubre los negocios de la comunidad que se están reactivando. Filtra por etiqueta para ver reaperturas,
-            eventos y promociones.
-          </p>
+        <div className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+          <div className="max-w-2xl">
+            <h2 className="text-3xl font-bold tracking-tight text-balance md:text-4xl" style={{ color: "#3D3020" }}>
+              Reactivando el Comercio
+            </h2>
+            <p className="mt-3 text-lg leading-relaxed" style={{ color: "#6B5B45" }}>
+              Descubre los negocios de la comunidad que se están reactivando: reaperturas, eventos y promociones.
+              Filtra por etiqueta o municipio para encontrarlos.
+            </p>
+          </div>
+
+          <div
+            className="flex shrink-0 flex-col items-start gap-3 rounded-2xl border border-dashed p-4 sm:flex-row sm:items-center"
+            style={{ borderColor: "#E4C79A", backgroundColor: "#FFFDF8" }}
+          >
+            <span
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
+              style={{ backgroundColor: "#FBEBD1", color: "#C77F16" }}
+            >
+              {user ? <Store className="h-5 w-5" aria-hidden="true" /> : <UserPlus className="h-5 w-5" aria-hidden="true" />}
+            </span>
+            <div className="max-w-xs text-sm leading-relaxed" style={{ color: "#6B5B45" }}>
+              {user ? "¿Tienes un negocio? Comparte tu reapertura, evento o promoción." : t("offer.needAccountBody")}
+            </div>
+            <Button
+              type="button"
+              onClick={handlePublishClick}
+              className="w-full shrink-0 rounded-full px-6 text-sm font-semibold text-white sm:w-auto"
+              style={{ backgroundColor: "#C77F16" }}
+            >
+              {user ? "Publicar mi negocio" : t("offer.registerCta")}
+            </Button>
+          </div>
         </div>
 
         {/* Filters */}
@@ -91,34 +127,16 @@ export function LuzAmigaFindHelp() {
         </div>
 
         <div className="mb-8 max-w-xl">
-          <label htmlFor="municipality-filter" className="sr-only">
+          <label htmlFor="municipality-filter" className="mb-2 block text-sm font-semibold" style={{ color: "#3A2E1A" }}>
             Filtrar por municipio de Colombia
           </label>
-          <div className="relative">
-            <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8A7659]" aria-hidden="true" />
-            <input
-              id="municipality-filter"
-              list="colombia-municipalities"
-              value={municipality}
-              onChange={(event) => changeMunicipality(event.target.value)}
-              placeholder="Buscar municipio de Colombia"
-              className="h-11 w-full rounded-full border bg-white pl-11 pr-11 text-sm text-[#4A3B2A] outline-none transition focus:ring-2 focus:ring-[#4A7C59]"
-              style={{ borderColor: "#E4C79A" }}
-            />
-            <datalist id="colombia-municipalities">
-              {municipalities.map((name) => <option key={name} value={name} />)}
-            </datalist>
-            {municipality ? (
-              <button
-                type="button"
-                onClick={() => changeMunicipality("")}
-                className="absolute right-3 top-1/2 inline-flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full text-[#8A7659] hover:bg-[#F1E4CC]"
-                aria-label="Limpiar filtro de municipio"
-              >
-                <X className="h-4 w-4" aria-hidden="true" />
-              </button>
-            ) : null}
-          </div>
+          <MunicipalityAutocomplete
+            id="municipality-filter"
+            value={municipality}
+            onChange={changeMunicipality}
+            municipalities={municipalities}
+            placeholder="Buscar municipio de Colombia"
+          />
           <p className="mt-2 text-xs text-[#8A7659]">
             {municipalities.length > FALLBACK_MUNICIPALITIES.length
               ? `${municipalities.length} municipios disponibles`
@@ -132,6 +150,7 @@ export function LuzAmigaFindHelp() {
             const category = listing.category ?? "events"
             const cat = CATEGORY_MAP[category]
             const Icon = cat.icon
+            const isExpanded = expandedId === listing.id
             return (
               <article
                 key={listing.id}
@@ -166,9 +185,7 @@ export function LuzAmigaFindHelp() {
                   {listing.description}
                 </p>
 
-                <MiniLocationMap lat={listing.lat} lng={listing.lng} label={listing.title} />
-
-                <div className="mt-auto flex items-center gap-1.5 text-sm" style={{ color: "#8A7659" }}>
+                <div className="flex items-center gap-1.5 text-sm" style={{ color: "#8A7659" }}>
                   <MapPin className="h-4 w-4" aria-hidden="true" />
                   {listing.address ?? listing.city ?? "Ubicación reconocida"}
                 </div>
@@ -178,26 +195,28 @@ export function LuzAmigaFindHelp() {
                     <span>{listing.contact}</span>
                   </div>
                 ) : null}
-                <a
-                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                    `${listing.address ?? listing.city ?? ""} ${listing.lat},${listing.lng}`,
-                  )}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex w-fit items-center gap-1.5 text-sm font-semibold text-[#4A7C59] underline-offset-4 hover:underline"
+
+                <button
+                  type="button"
+                  onClick={() => setExpandedId((id) => (id === listing.id ? null : listing.id))}
+                  aria-expanded={isExpanded}
+                  className="mt-auto inline-flex w-fit items-center gap-1.5 text-sm font-semibold text-[#4A7C59] underline-offset-4 hover:underline"
                 >
                   <Map className="h-4 w-4" aria-hidden="true" />
-                  Ver mapa
-                </a>
-                <a
-                  href={`https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${listing.lat},${listing.lng}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex w-fit items-center gap-1.5 text-sm font-semibold text-[#1769AA] underline-offset-4 hover:underline"
-                >
-                  <ExternalLink className="h-4 w-4" aria-hidden="true" />
-                  Ver Street View
-                </a>
+                  {isExpanded ? "Ocultar mapa" : "Ver mapa"}
+                </button>
+                {isExpanded ? (
+                  <div className="overflow-hidden rounded-xl border" style={{ borderColor: "#EAD9B8" }}>
+                    <iframe
+                      title={`Mapa de Google de ${listing.title}`}
+                      src={`https://www.google.com/maps?q=${listing.lat},${listing.lng}&z=16&output=embed`}
+                      className="h-56 w-full"
+                      style={{ border: 0 }}
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                    />
+                  </div>
+                ) : null}
               </article>
             )
           })}
@@ -231,6 +250,8 @@ export function LuzAmigaFindHelp() {
           </nav>
         ) : null}
       </div>
+
+      <PublishListingDialog open={publishOpen} onOpenChange={setPublishOpen} />
     </section>
   )
 }

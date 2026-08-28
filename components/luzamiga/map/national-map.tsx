@@ -2,12 +2,14 @@
 
 import dynamic from "next/dynamic"
 import { useEffect, useMemo, useState } from "react"
-import { AlertTriangle, BarChart3, Building2, Loader2, MapPin, Radio, Search, WifiOff, X } from "lucide-react"
+import { AlertTriangle, BarChart3, Building2, Loader2, MapPin, Radio, WifiOff } from "lucide-react"
 import { useItems } from "./use-items"
 import { colorForItem } from "./marker-icons"
 import { CATEGORIES } from "../categories"
 import { REPORT_COLORS, REPORT_TYPES, type MapItem } from "@/lib/luzamiga/types"
 import { useT } from "../i18n/language-provider"
+import { useAuth } from "../auth/auth-provider"
+import { MunicipalityAutocomplete } from "../municipality-autocomplete"
 
 const LeafletMap = dynamic(() => import("./leaflet-map"), {
   ssr: false,
@@ -27,6 +29,7 @@ function normalize(value: string) {
 
 export function NationalMap() {
   const { t, lang } = useT()
+  const { user, openLogin } = useAuth()
   const { items, serverTime, online } = useItems()
   const [userPosition, setUserPosition] = useState<{ lat: number; lng: number } | null>(null)
   const [locating, setLocating] = useState(false)
@@ -103,11 +106,21 @@ export function NationalMap() {
     }
   }
 
-  function clearLocality() {
-    setMunicipality("")
-    setActiveMunicipality("")
-    setLocalityPosition(null)
-    setAnalysisError(null)
+  function reportStatus() {
+    if (!user) {
+      openLogin("Debes iniciar sesión para reportar el estado de tu zona.")
+      return
+    }
+    document.getElementById("reportar-estado")?.scrollIntoView({ behavior: "smooth" })
+  }
+
+  function updateMunicipality(value: string) {
+    setMunicipality(value)
+    if (!value) {
+      setActiveMunicipality("")
+      setLocalityPosition(null)
+      setAnalysisError(null)
+    }
   }
 
   const mapItems = activeMunicipality
@@ -136,19 +149,30 @@ export function NationalMap() {
         </div>
 
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-          <button
-            type="button"
-            onClick={locate}
-            disabled={locating}
-            className="inline-flex items-center gap-2 rounded-full bg-[#C77F16] px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#A96912] disabled:opacity-60"
-          >
-            {locating ? (
-              <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
-            ) : (
-              <MapPin className="h-4 w-4" aria-hidden="true" />
-            )}
-            {t("map.myLocation")}
-          </button>
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              type="button"
+              onClick={locate}
+              disabled={locating}
+              className="inline-flex items-center gap-2 rounded-full bg-[#C77F16] px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#A96912] disabled:opacity-60"
+            >
+              {locating ? (
+                <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+              ) : (
+                <MapPin className="h-4 w-4" aria-hidden="true" />
+              )}
+              {t("map.myLocation")}
+            </button>
+            <button
+              type="button"
+              onClick={reportStatus}
+              className="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold shadow-sm transition hover:bg-[#F6ECD8]"
+              style={{ borderColor: "#E4C79A", color: "#8A6D3B", backgroundColor: "#FFFDF8" }}
+            >
+              <AlertTriangle className="h-4 w-4" aria-hidden="true" />
+              Quiero reportar el estado de mi ubicación
+            </button>
+          </div>
 
           <div className="flex items-center gap-2 text-xs font-medium">
             {online ? (
@@ -177,27 +201,14 @@ export function NationalMap() {
               <label htmlFor="locality-analysis" className="mb-2 block text-sm font-semibold text-[#3A2E1A]">
                 Analizar por localidad
               </label>
-              <div className="relative">
-                <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8A7659]" aria-hidden="true" />
-                <input
-                  id="locality-analysis"
-                  list="map-colombia-municipalities"
-                  value={municipality}
-                  onChange={(event) => setMunicipality(event.target.value)}
-                  onKeyDown={(event) => { if (event.key === "Enter") analyzeLocality() }}
-                  placeholder="Busca un municipio de Colombia"
-                  className="h-11 w-full rounded-full border bg-[#FFFDF8] pl-11 pr-10 text-sm text-[#3A2E1A] outline-none focus:ring-2 focus:ring-[#4A7C59]"
-                  style={{ borderColor: "#E4C79A" }}
-                />
-                <datalist id="map-colombia-municipalities">
-                  {municipalities.map((name) => <option key={name} value={name} />)}
-                </datalist>
-                {municipality ? (
-                  <button type="button" onClick={clearLocality} className="absolute right-3 top-1/2 inline-flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full text-[#8A7659] hover:bg-[#F1E4CC]" aria-label="Limpiar localidad">
-                    <X className="h-4 w-4" aria-hidden="true" />
-                  </button>
-                ) : null}
-              </div>
+              <MunicipalityAutocomplete
+                id="locality-analysis"
+                value={municipality}
+                onChange={updateMunicipality}
+                municipalities={municipalities}
+                placeholder="Busca un municipio de Colombia"
+                onEnter={analyzeLocality}
+              />
             </div>
             <button
               type="button"

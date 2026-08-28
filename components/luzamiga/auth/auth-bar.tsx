@@ -42,7 +42,7 @@ export function AuthBar() {
       <Button
         type="button"
         variant="outline"
-        onClick={openLogin}
+        onClick={() => openLogin()}
         className="rounded-full"
         style={{ borderColor: "#E4C79A", color: "#8A6D3B", backgroundColor: "#FFFDF8" }}
       >

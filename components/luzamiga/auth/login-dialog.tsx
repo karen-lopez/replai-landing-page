@@ -9,7 +9,7 @@ import { useAuth } from "./auth-provider"
 import { useT } from "../i18n/language-provider"
 
 export function LoginDialog() {
-  const { dialog, closeDialog, openRegister, login } = useAuth()
+  const { dialog, closeDialog, openRegister, login, loginReason } = useAuth()
   const { t } = useT()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -35,6 +35,14 @@ export function LoginDialog() {
           <DialogDescription style={{ color: "#6B5B45" }}>{t("login.description")}</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="grid gap-4">
+          {loginReason ? (
+            <p
+              className="rounded-lg px-4 py-2 text-sm"
+              style={{ background: "#FCEBD7", color: "#A96912" }}
+            >
+              {loginReason}
+            </p>
+          ) : null}
           <div className="grid gap-2">
             <Label htmlFor="login-email" style={{ color: "#4A3B2A" }}>
               {t("login.email")}

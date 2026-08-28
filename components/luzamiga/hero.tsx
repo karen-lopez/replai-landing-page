@@ -43,7 +43,7 @@ export function LuzAmigaHero() {
                 size="lg"
                 className="rounded-full px-8 py-6 text-base font-semibold text-white shadow-md transition-colors"
                 style={{ backgroundColor: "#D97706" }}
-                onClick={() => document.getElementById("ofrecer-ayuda")?.scrollIntoView({ behavior: "smooth" })}
+                onClick={() => document.getElementById("comercio")?.scrollIntoView({ behavior: "smooth" })}
               >
                 Publicar mi negocio
               </Button>
@@ -52,7 +52,7 @@ export function LuzAmigaHero() {
                 variant="outline"
                 className="rounded-full border px-8 py-6 text-base font-semibold"
                 style={{ borderColor: "#E4C79A", color: "#8A6D3B", backgroundColor: "transparent" }}
-                onClick={() => document.getElementById("encontrar-ayuda")?.scrollIntoView({ behavior: "smooth" })}
+                onClick={() => document.getElementById("comercio")?.scrollIntoView({ behavior: "smooth" })}
               >
                 Explorar el comercio
               </Button>

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { MapPin, TriangleAlert, ShieldCheck, Construction, Loader2, LogIn } from "lucide-react"
+import { MapPin, TriangleAlert, ShieldCheck, Construction, Loader2 } from "lucide-react"
 import { useAuth } from "../auth/auth-provider"
 import { useT } from "../i18n/language-provider"
 import { REPORT_TYPES, REPORT_COLORS, isInsideColombia, type ReportType } from "@/lib/luzamiga/types"
@@ -16,26 +16,16 @@ const REPORT_ICONS: Record<ReportType, typeof TriangleAlert> = {
 type Status = { kind: "idle" | "locating" | "sending" | "ok" | "queued" | "error"; message?: string }
 
 export function UserReport() {
-  const { user, openLogin } = useAuth()
+  const { user } = useAuth()
   const { t } = useT()
   const [selected, setSelected] = useState<ReportType | null>(null)
   const [note, setNote] = useState("")
   const [status, setStatus] = useState<Status>({ kind: "idle" })
 
   if (!user) {
-    return (
-      <div className="rounded-2xl border border-dashed border-[#EAD9B8] bg-[#FFFDF8] p-6 text-center">
-        <p className="text-[#6B5E48] leading-relaxed">{t("userReport.needAuth")}</p>
-        <button
-          type="button"
-          onClick={openLogin}
-          className="mt-4 inline-flex items-center gap-2 rounded-full bg-[#C77F16] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#A96912]"
-        >
-          <LogIn className="h-4 w-4" aria-hidden="true" />
-          {t("auth.login")}
-        </button>
-      </div>
-    )
+    // El llamado a iniciar sesión vive en el botón "Quiero reportar el
+    // estado de mi ubicación" junto a "Mi ubicación" en el mapa.
+    return null
   }
 
   async function submit() {

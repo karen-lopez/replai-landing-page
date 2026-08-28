@@ -223,3 +223,11 @@ body {
   .a11y-trigger span { display: none; }
   .a11y-trigger { width: 3rem; height: 3rem; justify-content: center; padding: 0; }
 }
+
+/* Leaflet's internal panes/controls use z-index up to 1000. Without this,
+   .leaflet-container never forms its own stacking context, so those values
+   compare directly against the rest of the page and render on top of
+   modals (Radix Dialog uses z-50). Pinning z-index here contains them. */
+.leaflet-container {
+  z-index: 0;
+}
