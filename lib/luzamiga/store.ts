@@ -9,9 +9,11 @@ import earthquakeData from "@/data/terremoto-17-agosto-2023.json"
 interface LuzAmigaStore {
   items: MapItem[]
   updatedAt: number
+  seedVersion?: number
 }
 
 const g = globalThis as unknown as { __luzAmigaStore?: LuzAmigaStore }
+const SEED_VERSION = 2
 
 function seed(): MapItem[] {
   const now = Date.now()
@@ -167,7 +169,14 @@ function seed(): MapItem[] {
 
 function getStore(): LuzAmigaStore {
   if (!g.__luzAmigaStore) {
-    g.__luzAmigaStore = { items: seed(), updatedAt: Date.now() }
+    g.__luzAmigaStore = { items: seed(), updatedAt: Date.now(), seedVersion: SEED_VERSION }
+  } else if (g.__luzAmigaStore.seedVersion !== SEED_VERSION) {
+    const store = g.__luzAmigaStore
+    const existingIds = new Set(store.items.map((item) => item.id))
+    const missingSeedItems = seed().filter((item) => !existingIds.has(item.id))
+    store.items.push(...missingSeedItems)
+    store.seedVersion = SEED_VERSION
+    store.updatedAt = Date.now()
   }
   return g.__luzAmigaStore
 }
